@@ -2,7 +2,9 @@
 
 Quick study about some LLM models coding performance in Leetcode challenges. Work developed for university extension fair.
 
-Check here the [Leetcode Dataset](https://huggingface.co/datasets/newfacade/LeetCodeDataset).
+Check to view [Leetcode Dataset](https://huggingface.co/datasets/newfacade/LeetCodeDataset).
+
+Click to view [generated LLM code](./src/generated_code/).
 
 Used LLMs:
 
@@ -14,6 +16,8 @@ Used LLMs:
 
 Requirements:
 
+Prompts:
+
 ```
 Requirements:
 - Generate a complete C program with only the function that solve the problem.
@@ -22,12 +26,10 @@ Requirements:
 - Return the solution inside a ```c code block.
 ```
 
-Prompts:
-
 - `prompt0` - "Solve the following LeetCode problem using C (not C++)."
 - `prompt1` - "You are an expert C programmer, that knows how to make clean and optimized memory/processing code. Solve the following LeetCode problem using C (not C++)."
 
-Selected problems:
+Selected problems (hard):
 
 - 4 - [Median of Two Sorted Arrays](https://leetcode.com/problems/median-of-two-sorted-arrays/)
 - 10 - [Regular Expression Matching](https://leetcode.com/problems/regular-expression-matching/)
