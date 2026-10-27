@@ -6,13 +6,11 @@ import gc
 import textwrap
 import torch
 
-N_PROBLEMS = 1
+N_PROBLEMS = 10
 
 REQUIREMENTS = """
 Requirements:
-- Generate a complete C program containing a main() function.
-- Read input from stdin.
-- For arrays, read the array length first, followed by the elements.
+- Generate a complete C program with only the function that solve the problem.
 - Print only the final result to stdout.
 - Do not print explanations or debugging information.
 - Return the solution inside a ```c code block.
@@ -39,7 +37,7 @@ if __name__ == "__main__":
 
     # Open source models in Hugging Face
     models = [
-        # Heavy models
+        # Heavy models (problematic)
         #"deepseek-ai/DeepSeek-V4.1-Flash-1017", # https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017
         #"openai/gpt-oss-20b", # https://huggingface.co/openai/gpt-oss-20b
         #"Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8", # https://huggingface.co/Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8
@@ -86,8 +84,8 @@ if __name__ == "__main__":
                 folder.mkdir(parents=True, exist_ok=True)
 
                 # Raw response, to diagnose when no code is extracted
-                raw_file = folder / f"{row.question_id}_prompt{idx}.txt"
-                raw_file.write_text(generated_text, encoding="utf-8")
+                #raw_file = folder / f"{row.question_id}_prompt{idx}.txt"
+                #raw_file.write_text(generated_text, encoding="utf-8")
 
                 match = re.search(
                     r"```c[^\S\n]*\n(.*?)```",

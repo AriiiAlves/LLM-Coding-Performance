@@ -1,0 +1,42 @@
+#include <stdio.h>
+
+double findMedianSortedArrays(int* nums1, int m, int* nums2, int n) {
+    if (m > n) {
+        return findMedianSortedArrays(nums2, n, nums1, m);
+    }
+    
+    int iMin = 0, iMax = m, halfLen = (m + n + 1) / 2;
+    while (iMin <= iMax) {
+        int i = (iMin + iMax) / 2;
+        int j = halfLen - i;
+        if (i < iMax && nums2[j-1] > nums1[i]) {
+            iMin = i + 1;
+        } else if (i > iMin && nums1[i-1] > nums2[j]) {
+            iMax = i - 1;
+        } else {
+            int maxLeft;
+            if (i == 0) maxLeft = nums2[j-1];
+            else if (j == 0) maxLeft = nums1[i-1];
+            else maxLeft = (nums1[i-1] > nums2[j-1]) ? nums2[j-1] : nums1[i-1];
+            
+            if ((m + n) % 2 == 1) {
+                return maxLeft;
+            }
+            
+            int minRight;
+            if (i == m) minRight = nums2[j];
+            else if (j == n) minRight = nums1[i];
+            else minRight = (nums1[i] < nums2[j]) ? nums1[i] : nums2[j];
+            
+            return (maxLeft + minRight) / 2.0;
+        }
+    }
+}
+
+int main() {
+    int nums1[] = {1, 3};
+    int nums2[] = {2};
+    double median = findMedianSortedArrays(nums1, 2, nums2, 1);
+    printf("%.5f\n", median);
+    return 0;
+}

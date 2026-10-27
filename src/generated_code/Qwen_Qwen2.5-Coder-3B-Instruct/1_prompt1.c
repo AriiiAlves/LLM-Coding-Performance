@@ -24,30 +24,18 @@ int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
 }
 
 int main() {
-    int numsSize, target, *nums, *result;
+    int nums[] = {2, 7, 11, 15};
+    int target = 9;
     int returnSize;
 
-    // Read input
-    scanf("%d", &numsSize);
-    nums = (int *)malloc(numsSize * sizeof(int));
-    for (int i = 0; i < numsSize; i++) {
-        scanf("%d", &nums[i]);
-    }
-    scanf("%d", &target);
+    int *result = twoSum(nums, sizeof(nums) / sizeof(nums[0]), target, &returnSize);
 
-    // Call the function
-    result = twoSum(nums, numsSize, target, &returnSize);
-
-    // Print the result
-    if (returnSize == 2) {
+    if (result) {
         printf("[%d, %d]\n", result[0], result[1]);
+        free(result);
     } else {
-        printf("No solution found\n");
+        printf("No solution found.\n");
     }
-
-    // Free allocated memory
-    free(nums);
-    free(result);
 
     return 0;
 }
