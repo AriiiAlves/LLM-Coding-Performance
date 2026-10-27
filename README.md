@@ -29,6 +29,17 @@ Requirements:
 - `prompt0` - "Solve the following LeetCode problem using C (not C++). [Requirements] Problem: [Exercise]"
 - `prompt1` - "You are an expert C programmer, that knows how to make clean and optimized memory/processing code. Solve the following LeetCode problem using C (not C++). [Requirements] Problem: [Exercise]"
 
+## Used LLMs (big models)
+
+- Deepseek V4.1 Flash
+- Gemini 3 Auto - Low
+- GPT 5.6 Sol - Instant
+- Haiku 5.5 - Low
+
+## Prompt
+
+[Leetcode Problems](./Leetcode%20problems.pdf) + "Please solve all the 10 problems and give me the separated codes."
+
 ## Selected problems (hard)
 
 - 4 - [Median of Two Sorted Arrays](https://leetcode.com/problems/median-of-two-sorted-arrays/)
