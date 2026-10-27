@@ -34,6 +34,7 @@ if __name__ == "__main__":
     )
 
     df = dataset.to_pandas()
+    df = df[df["difficulty"] == "Hard"]
 
     # Open source models in Hugging Face
     models = [
@@ -61,10 +62,12 @@ if __name__ == "__main__":
             device_map="auto"
         )
 
-        for row in df.itertuples():
-            if row.Index == N_PROBLEMS:
-                break
+        counter = 0
 
+        for row in df.itertuples():
+            if counter == N_PROBLEMS: break
+
+            counter += 1
             prompts = [template.format(problem=row.problem_description) for template in PROMPT_TEMPLATES]
 
             for idx, prompt in enumerate(prompts):
