@@ -2,7 +2,7 @@
 
 Quick study about some LLM models coding performance in Leetcode challenges. Work developed for university extension fair.
 
-Check to view [Leetcode Dataset](https://huggingface.co/datasets/newfacade/LeetCodeDataset).
+Click to view [Leetcode Dataset](https://huggingface.co/datasets/newfacade/LeetCodeDataset).
 
 Click to view [generated LLM code](./src/generated_code/).
 
