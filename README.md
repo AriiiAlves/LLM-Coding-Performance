@@ -6,7 +6,7 @@ Click to view [Leetcode Dataset](https://huggingface.co/datasets/newfacade/LeetC
 
 Click to view [generated LLM code](./src/generated_code/).
 
-Used LLMs:
+## Used LLMs
 
 - [Qwen2.5-Coder-1.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct)
 - [Qwen2.5-Coder-3B-Instruct](https://huggingface.co/Qwen/Qwen2.5-Coder-3B-Instruct)
@@ -14,9 +14,9 @@ Used LLMs:
 - [Phi-4-mini-instruct](https://huggingface.co/microsoft/Phi-4-mini-instruct)
 - [SmolLM3-3B](https://huggingface-co.translate.goog/HuggingFaceTB/SmolLM3-3B)
 
-Requirements:
+## Prompts
 
-Prompts:
+Requirements (before the exercise)
 
 ```
 Requirements:
@@ -26,10 +26,10 @@ Requirements:
 - Return the solution inside a ```c code block.
 ```
 
-- `prompt0` - "Solve the following LeetCode problem using C (not C++)."
-- `prompt1` - "You are an expert C programmer, that knows how to make clean and optimized memory/processing code. Solve the following LeetCode problem using C (not C++)."
+- `prompt0` - "Solve the following LeetCode problem using C (not C++). [Requirements] Problem: [Exercise]"
+- `prompt1` - "You are an expert C programmer, that knows how to make clean and optimized memory/processing code. Solve the following LeetCode problem using C (not C++). [Requirements] Problem: [Exercise]"
 
-Selected problems (hard):
+## Selected problems (hard)
 
 - 4 - [Median of Two Sorted Arrays](https://leetcode.com/problems/median-of-two-sorted-arrays/)
 - 10 - [Regular Expression Matching](https://leetcode.com/problems/regular-expression-matching/)
