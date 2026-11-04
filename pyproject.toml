@@ -1,7 +1,7 @@
 [project]
 name = "llm-coding-performance"
 version = "0.1.0"
-description = "Add your description here"
+description = "Benchmark of open-source LLMs solving hard LeetCode problems in C++"
 readme = "README.md"
 authors = [
     { name = "Ariel", email = "alvzariel@gmail.com" }

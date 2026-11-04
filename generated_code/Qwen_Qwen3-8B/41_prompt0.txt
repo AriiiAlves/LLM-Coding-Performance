@@ -1,0 +1,260 @@
+<think>
+Okay, I need to solve this problem where I have to find the smallest missing positive integer in an unsorted array. The constraints are O(n) time and O(1) space. Hmm, let's think.
+
+The examples show that for [1,2,0], the answer is 3. Because all numbers from 1 to 2 are present. For [3,4,-1,1], the answer is 2. So the key is that the numbers should be in the range [1, n], where n is the length of the array. Because if all numbers from 1 to n are present, then the answer is n+1. Otherwise, the missing one is somewhere in 1 to n.
+
+So the approach should be to place each number in its correct position if possible. Like, for example, if the number is between 1 and n, we swap it to its correct spot. This way, after processing, the array will have numbers 1 to n in their correct positions. Then we can iterate through the array and find the first position where the number is not equal to its index + 1. If all are correct, then return n+1.
+
+Wait, but how to do this in O(n) time and O(1) space? Let's think about the steps.
+
+Let me outline the steps:
+
+1. Iterate through each element in the array.
+2. For each element, if it's in the range 1 to n (inclusive), we need to place it in the correct position. For example, if the element is 3, and the index is 0, then we need to swap it with the element at index 2 (since 3 should be at position 2, 0-based). But during this process, we have to make sure that the elements are in the correct place. So we might have to swap multiple times until the current element is in the correct position or it's out of range.
+
+But during this process, we have to make sure that we don't process elements that are already in the correct place. For example, if the element is already at index i, then we can skip it.
+
+So the algorithm would be:
+
+For each index i from 0 to n-1:
+    while the current number is between 1 and n, and it's not in the correct position (nums[i] != nums[nums[i]-1]):
+        swap nums[i] with nums[nums[i]-1]
+
+Wait, but how does this work? Let's take an example. Suppose nums[i] is 3, and the correct position is index 2 (since 3-1=2). So we swap nums[i] with nums[2]. After swapping, the element at index i is now the element that was at index 2. Then, we check again if the current element is in the correct position.
+
+This way, after processing, all elements in the correct positions are in place. Then, after this process, we iterate through the array again. For each index i, if nums[i] != i+1, then return i+1. Otherwise, return n+1.
+
+This approach would be O(n) time because each swap operation puts an element into its correct position, and each element is swapped at most once. So the total number of swaps is O(n). Then, the second pass is O(n) as well.
+
+Now, the problem is to implement this in C++.
+
+Let me think about the code structure.
+
+The function is given a vector<int>& nums. So we can modify the array in place.
+
+So the steps in code:
+
+Loop through each element in nums. For each index i:
+
+While nums[i] is between 1 and n (inclusive), and nums[i] is not equal to nums[nums[i]-1], then swap nums[i] with nums[nums[i]-1].
+
+Wait, but how to handle the case where the element is already in the correct position. For example, if nums[i] is 3, and the element at index 2 is 3. Then, the condition would be false, so we don't swap.
+
+But during the loop, after swapping, the element at index i is now the element that was at the correct position. So after the swap, the element at index i is now in the correct position. So the next step would be to check again for the same index.
+
+Wait, but the loop is for each index i. So for example, after swapping, the element at index i is now correct. So we need to check again for the same index. Because after swapping, the element at i may have changed. So the loop is a while loop, not a for loop. So for each i, we have to check and swap until the current element is in the correct position or out of range.
+
+So in code:
+
+for (int i = 0; i < nums.size(); ++i) {
+    while (nums[i] >= 1 && nums[i] <= nums.size() && nums[i] != nums[nums[i] - 1]) {
+        swap(nums[i], nums[nums[i] - 1]);
+    }
+}
+
+Wait, but the condition is that nums[i] is in the range 1 to n. So for example, if nums[i] is 3, and the size is 4 (n=4). Then, the correct position is index 2. So the condition is that nums[i] is between 1 and n. So the code checks that.
+
+Once this is done, then after processing all elements, we loop through the array again. For each index i, check if nums[i] == i+1. If not, return i+1. Otherwise, after checking all, return n+1.
+
+So for example, in the first example [1,2,0], after processing:
+
+i=0: nums[0] is 1, which is correct. So no swap.
+
+i=1: nums[1] is 2, correct. So no swap.
+
+i=2: nums[2] is 0. Which is not in 1 to 3. So no swap.
+
+Then, check each element. At index 0, 1 is correct. Index 1, 2 is correct. Index 2, 0. So the missing is 3.
+
+Another example: [3,4,-1,1]. Let's process each i:
+
+i=0: nums[0] is 3. Which is in 1 to 4. The correct position is index 2. So swap with nums[2], which is -1. After swap, nums becomes [-1,4,3,1]. Now, nums[0] is -1, which is out of range. So loop ends.
+
+i=1: nums[1] is 4. Correct position is index 3. So swap with nums[3], which is 1. Now nums is [-1,1,3,4]. Now, nums[1] is 1. Correct position is index 0. So swap with nums[0], which is -1. Now nums becomes [1,-1,3,4]. Now, nums[1] is -1, which is out of range. So loop ends.
+
+i=2: nums[2] is 3. Correct position is index 2. So no swap.
+
+i=3: nums[3] is 4. Correct position is index 3. So no swap.
+
+Now, check each index:
+
+index 0: 1. Correct. index 1: -1. So the missing is 2.
+
+So the code would return 2.
+
+So this seems to work.
+
+Now, the code in C++.
+
+But wait, the loop for i from 0 to nums.size()-1. So for each i, we process the element. But during the swap, the element at nums[i] may change. So the while loop is needed.
+
+Now, the code:
+
+#include <vector>
+using namespace std;
+
+int firstMissingPositive(vector<int>& nums) {
+    int n = nums.size();
+    for (int i = 0; i < n; ++i) {
+        while (nums[i] >= 1 && nums[i] <= n && nums[i] != nums[nums[i] - 1]) {
+            swap(nums[i], nums[nums[i] - 1]);
+        }
+    }
+    for (int i = 0; i < n; ++i) {
+        if (nums[i] != i + 1) {
+            return i + 1;
+        }
+    }
+    return n + 1;
+}
+
+Wait, but what about when the element is in the correct position but the value is not correct? For example, if the array is [1,1]. Then, during the loop, for i=0, nums[0] is 1, which is correct. For i=1, nums[1] is 1. The correct position is index 0. So we swap nums[1] with nums[0]. Now, nums becomes [1,1]. Then, the condition is nums[1] is 1, which is correct. So the code would not swap again. Then, in the second loop, for i=0, nums[0] is 1. For i=1, nums[1] is 1. So the code returns n+1, which is 2. But the correct answer is 2. So that's correct.
+
+Another example: [7,8,9,11,12]. The array size is 5. So during the loop, each element is larger than 5. So the first loop does nothing. Then, in the second loop, check each element. All are not equal to i+1. So the first i where this is true is i=0. So returns 1.
+
+Yes, that's correct.
+
+But what about when there are duplicates? For example, [1,1]. The code would process the first element, which is correct. Then for i=1, nums[1] is 1. The correct position is index 0. So swap with nums[0], which is 1. So after swap, nums[0] is 1, nums[1] is 1. Then, the loop ends. Then, in the second loop, for i=0, nums[0] is 1. For i=1, nums[1] is 1. So returns 2. Which is correct.
+
+Another case: [2,3,1]. The code would process each element. For i=0, nums[0] is 2. Correct position is index 1. So swap with nums[1], which is 3. Now nums is [3,2,1]. Then, check again. nums[0] is 3. Correct position is index 2. So swap with nums[2], which is 1. Now nums is [1,2,3]. Then, the loop ends. Then, in the second loop, all elements are correct. So returns 4.
+
+Yes, that's correct.
+
+So this code should work.
+
+But wait, what about when the array has elements that are not in the range. For example, [0, 1]. Then, during the loop, for i=0, nums[0] is 0, which is not in 1 to 2. So no swap. Then, for i=1, nums[1] is 1. Correct position is index 0. So swap with nums[0], which is 0. Now nums becomes [1,0]. Then, check again. nums[1] is 0, which is not in range. So the loop ends. Then, in the second loop, for i=0, nums[0] is 1. Correct. For i=1, nums[1] is 0. So returns 2. Which is correct.
+
+So the code seems to handle that.
+
+Now, the code is written. But need to include the necessary headers. The given code starts with #include <vector>, but in C++, the swap function is in the standard library. So the code should include <vector> and <algorithm> for swap? Wait, no. The swap function is part of the standard library, but in C++, the swap function is in the std namespace. But since we are using using namespace std; in the code, it's okay.
+
+Wait, but the code as written includes <vector> and uses the vector. But the code for swap is in the standard library. So the code should include <vector> and <algorithm>? Or is the swap function available without including <algorithm>? Because in C++, the swap function is part of the standard library, but the code may need to include <algorithm> for it. Wait, no. The swap function is part of the standard library, but in C++, the swap function is in the <algorithm> header. Wait, no. The swap function is in the <utility> header. Or is it part of the standard?
+
+Wait, in C++, the swap function is part of the standard library. So when you use swap(a, b), it's in the std namespace. But the code uses using namespace std; so it's okay. However, the code may need to include <algorithm> for the swap function. Wait, no. The swap function is in the <algorithm> header. Or is it in <utility>? Let me think. The C++ standard says that the swap function is in the <algorithm> header. So to use swap, you need to include <algorithm>?
+
+Wait, no. The swap function is part of the standard library, but in C++, the swap function is in the <algorithm> header. Or is it in <utility>? Let me check. For example, in C++, the swap function is declared in the <algorithm> header. So if the code uses swap, it needs to include <algorithm>?
+
+But in the code given, the user has written:
+
+#include <vector>
+using namespace std;
+
+But the code uses swap. So the code may need to include <algorithm> for the swap function. But in C++, the swap function is in the <algorithm> header. So the code should include that.
+
+Wait, but in the code given, the user hasn't included <algorithm>. So the code may not compile. So the code needs to include <algorithm> for the swap function.
+
+Wait, but in C++, the swap function is part of the standard library. So when you use swap, you need to include the appropriate header. So in the code, the user has to include <algorithm> for the swap function. But the code as written in the problem's initial code has only #include <vector>. So the code as written would not compile. So the code needs to include <algorithm>?
+
+But the problem says to include every #include the code needs. So the code should include <vector> and <algorithm>?
+
+But the initial code given by the user starts with #include <vector>, but the code uses swap. So the code needs to include <algorithm> as well.
+
+So the code should have:
+
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+But the problem says to include every #include the code needs. So the code must include <algorithm> for the swap function.
+
+But in the code given, the user's code starts with #include <vector>, but the code uses swap. So the code must include <algorithm> as well.
+
+So the code should have:
+
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+But the problem says to include every #include the code needs. So the code must include those headers.
+
+So the code should be:
+
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int firstMissingPositive(vector<int>& nums) {
+    int n = nums.size();
+    for (int i = 0; i < n; ++i) {
+        while (nums[i] >= 1 && nums[i] <= n && nums[i] != nums[nums[i] - 1]) {
+            swap(nums[i], nums[nums[i] - 1]);
+        }
+    }
+    for (int i = 0; i < n; ++i) {
+        if (nums[i] != i + 1) {
+            return i + 1;
+        }
+    }
+    return n + 1;
+}
+
+But wait, the code uses swap, which is in the <algorithm> header. So the code must include that. So the code needs to include <algorithm> as well.
+
+But the initial code given by the user starts with #include <vector>, but the code uses swap. So the code must include <algorithm> as well.
+
+So the code should have:
+
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+But the problem says to include every #include the code needs. So that's correct.
+
+But in the problem's initial code, the user has written:
+
+#include <vector>
+using namespace std;
+
+But the code uses swap. So the code would not compile without including <algorithm>?
+
+Yes. So the code must include <algorithm> for the swap function.
+
+So the code should have:
+
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+But the problem says to include every #include the code needs. So that's correct.
+
+So the code is correct.
+
+Now, let's check for possible errors.
+
+What about when the array has elements that are out of range, but after processing, the correct elements are in place.
+
+Another test case: [1,1]. The code processes i=0: nums[0] is 1, correct. i=1: nums[1] is 1. So the correct position is index 0. So swap with nums[0], which is 1. So after swap, nums[0] is 1, nums[1] is 1. Then, the loop ends. Then, in the second loop, for i=0, nums[0] is 1. For i=1, nums[1] is 1. So returns 2. Which is correct.
+
+Another test case: [2, 1, 3]. The code processes i=0: nums[0] is 2. Correct position is index 1. So swap with nums[1], which is 1. Now nums is [1,2,3]. Then, for i=0, the element is correct. For i=1, element is 2. Correct. For i=2, element is 3. Correct. So returns 4.
+
+Yes.
+
+Another case: [4,3,2,1]. The code processes each element. For i=0, nums[0] is 4. Correct position is index 3. So swap with nums[3], which is 1. Now nums is [1,3,2,4]. Then, check again. nums[0] is 1, correct. For i=1, nums[1] is 3. Correct position is index 2. So swap with nums[2], which is 2. Now nums is [1,2,3,4]. Then, for i=2, nums[2] is 3. Correct. For i=3, nums[3] is 4. Correct. So returns 5.
+
+Yes.
+
+So the code seems to handle all cases.
+
+So the code is correct.
+</think>
+
+```cpp
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int firstMissingPositive(vector<int>& nums) {
+    int n = nums.size();
+    for (int i = 0; i < n; ++i) {
+        while (nums[i] >= 1 && nums[i] <= n && nums[i] != nums[nums[i] - 1]) {
+            swap(nums[i], nums[nums[i] - 1]);
+        }
+    }
+    for (int i = 0; i < n; ++i) {
+        if (nums[i] != i + 1) {
+            return i + 1;
+        }
+    }
+    return n + 1;
+}
+```

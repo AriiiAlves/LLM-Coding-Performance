@@ -1,0 +1,1591 @@
+<think>
+Okay, I need to solve this LeetCode problem. Let me read the problem carefully again. 
+
+The task is to find all starting indices in string s where a concatenated substring exists. The concatenated substring is formed by exactly all the strings in any permutation of the given words array. All words in the array are of the same length. 
+
+So, for example, if words are ["foo", "bar"], then any permutation's concatenation would be "foobar" or "barfoo". The problem is to find all starting positions in s where such a substring exists.
+
+Let me think about the approach. 
+
+First, the key points: all words have the same length. Let's call this word length as 'w'. The total length of the concatenated substring would be len(words) * w. Let's call this total length 'total_len'. 
+
+So for each possible starting index in s, we need to check if a substring of length total_len exists such that it's a concatenation of all the words in some permutation. 
+
+But how to check that efficiently?
+
+The brute force approach would be to check every possible substring of length total_len and see if it can be split into k words (where k is the number of words in the array) each of length w, and that the count of each word matches exactly the count in the words array. 
+
+But for large inputs, this might be too slow. Let's think about the constraints. 
+
+Constraints say that s can be up to 10^4 characters. Words can be up to 5000 elements. So for each possible starting index, checking each possible substring could be O(n * k * w) time, which might be too slow. 
+
+But maybe there's a smarter way. 
+
+Let me think about the sliding window approach. Since all words are of the same length, perhaps we can process the string in chunks of w. 
+
+Another idea: for each possible starting position in s, check if the substring starting at that position and of length total_len can be split into k words of length w, and that the count of each word matches the words array. 
+
+But how to do this efficiently. 
+
+Let me think about the steps:
+
+1. Precompute the count of each word in the words array. For example, if words is ["foo", "bar"], then the count is {"foo":1, "bar":1}.
+
+2. For each possible starting index in s, check if there's a substring of length total_len that can be split into k words, each of length w, and that the count of these words matches the original count. 
+
+But how to check that. 
+
+For example, for a substring of length total_len, which is k * w. So for each possible starting index, we can split the substring into k parts, each of length w. Then check if the count of these parts matches the original count. 
+
+But for each possible starting index, this would take O(k) time. 
+
+But the problem is that for each possible starting index, the total number of possible starting positions is O(n), and for each, O(k) steps. So total time would be O(n * k). But with n up to 1e4 and k up to 5000, that's 5e7 operations. Which might be acceptable, but perhaps there's a better way. 
+
+But considering that for each possible starting index, the substring must be of length total_len. So the starting index can only be from 0 to len(s) - total_len. 
+
+So for example, if the total_len is 6, then the starting index can be from 0 to len(s) - 6. 
+
+But how to process this efficiently. 
+
+Another approach: since all words are of same length, we can process the string in chunks of w. For example, for each possible remainder mod w. 
+
+Wait, here's an idea inspired by the sliding window approach. 
+
+Let me think: for each possible starting position in the string s, but considering that the words are of length w. So for each possible starting position, the starting index can be from 0 to len(s) - total_len. 
+
+But for each possible starting index, the substring is of length total_len. So for example, if the words are of length 3, then the substring is split into parts of 3 characters each. 
+
+But how to check if the substring is a concatenation of all the words. 
+
+So for each possible starting index, we can split the substring into k parts, each of length w, and check if the count of these parts matches the original count. 
+
+But how to do this efficiently. 
+
+Let me think about the steps again. 
+
+First, compute the total number of words, k = words.size(). 
+
+Each word has length w = words[0].length(). 
+
+total_len = k * w. 
+
+So for each possible starting index i in s, such that i + total_len <= len(s), we can check the substring s[i:i+total_len]. 
+
+Then, split this substring into k parts, each of length w. 
+
+For example, for the substring starting at i, the first word is s[i:i+w], then next is s[i + w : i + 2w], etc. 
+
+Then, we need to check if the count of these words matches the original count. 
+
+But how to do this efficiently. 
+
+But for each such substring, we can collect the words, and compare their counts. 
+
+But for each such substring, this would take O(k) time. 
+
+But for large k, this could be expensive. 
+
+But given that the constraints are up to 1e4 for s, and 5000 for k, then for each possible i, O(k) steps. So total steps would be O(n * k). 
+
+But for n=1e4 and k=5e3, that's 5e7 steps. Which might be acceptable. 
+
+But perhaps there's a better way. 
+
+Another idea: for each possible starting position mod w. 
+
+Because the words are of length w, so for any possible starting index, the starting position mod w can be considered. 
+
+For example, for words of length 3, the possible starting positions for the first word in the concatenated substring can be 0, 1, 2. 
+
+So for each possible mod value (from 0 to w-1), we can process the string in steps of w. 
+
+This is similar to the approach used in the problem where you have to find all anagrams of a certain length. 
+
+So for each mod value, we can process the string in steps of w. 
+
+Let me think. 
+
+For example, for mod = 0, we check all starting positions that are multiples of w. 
+
+For mod = 1, we check starting positions that are 1 mod w. 
+
+But how does this help? 
+
+Well, for each mod value, we can process the string in a sliding window approach. 
+
+Let me think. 
+
+Suppose the words are of length w. For each possible starting position in the string s, the first word in the concatenated substring must start at position i, and then the next word starts at i + w, etc. 
+
+So for each possible mod value, we can process the string in steps of w. 
+
+For example, for mod = 0, the starting positions are 0, w, 2w, etc. 
+
+For each of these positions, we can check if the substring starting at that position and of length total_len is a valid concatenation. 
+
+But how to do this with a sliding window. 
+
+Let me think. 
+
+For each mod value, we can process the string in a sliding window approach. 
+
+For example, for mod = 0, the first word starts at position 0, then the next word starts at position w, then 2w, etc. 
+
+So for each possible starting position in the string, we can check if the substring starting at that position and of length total_len can be split into k words. 
+
+But how to do this efficiently. 
+
+Let me think of the sliding window approach for each mod. 
+
+For each mod, we can process the string in steps of w. 
+
+For example, for mod = 0, the starting positions are 0, w, 2w, etc. 
+
+For each of these positions, we can check the window of size k * w. 
+
+But how to track the count of words in the current window. 
+
+Let me think. 
+
+For each mod, we can iterate through the string in steps of w. 
+
+For example, for mod = 0, the first position is 0, then 0 + w, then 0 + 2w, etc. 
+
+Each time, we can check the window of size k * w. 
+
+But how to manage the sliding window. 
+
+Alternatively, for each possible starting position in the string, we can check the window of size k * w. 
+
+But for each possible starting position, the window is of size k * w. 
+
+But for each such window, we can split it into k words of length w. 
+
+So for each window, we can collect the words, and compare their counts with the original words. 
+
+But how to do this efficiently. 
+
+But for each window, the number of words is k. 
+
+So for each window, we can collect the words, and check if their count matches. 
+
+But for large k, this could be O(k) per window. 
+
+But perhaps there's a way to optimize this. 
+
+Another idea: for each possible mod, we can use a sliding window approach where the window is of size k * w. 
+
+But since the words are of length w, the window can be split into k words. 
+
+So for each mod, we can process the string in steps of w. 
+
+Let me think of an example. 
+
+Suppose the words are of length 3, and the total_len is 6 (k=2). 
+
+For mod = 0, the starting positions are 0, 3, 6, etc. 
+
+For each starting position i, the window is from i to i + 6. 
+
+But for each such window, the words are s[i:i+3], s[i+3:i+6]. 
+
+So for each possible starting position, we can check if the words in the window match the required count. 
+
+But how to do this efficiently. 
+
+Let me think of the sliding window approach. 
+
+For each mod, we can process the string in steps of w. 
+
+For example, for mod = 0, the starting positions are 0, w, 2w, etc. 
+
+For each of these positions, we can check the window of size k * w. 
+
+But how to manage the sliding window. 
+
+Let me think of the following approach: 
+
+For each possible mod (from 0 to w-1), we can process the string in steps of w. 
+
+For each step, we can have a sliding window that contains the current window of words. 
+
+For example, for mod = 0, the first word starts at position 0, then the next word starts at position w, etc. 
+
+So for each possible starting position in the string, we can check the window of size k * w. 
+
+But how to manage the sliding window. 
+
+Alternatively, for each mod, we can process the string as a list of words. 
+
+For example, for mod = 0, the words are s[0..w-1], s[w..2w-1], s[2w..3w-1], etc. 
+
+Then, the problem becomes finding a window of size k words in this list, such that the count of each word matches the original count. 
+
+This is similar to the sliding window problem where we have to find all windows of size k that have the same count as the original. 
+
+So for each mod, we can process the list of words in the string, and then use a sliding window approach. 
+
+This seems promising. 
+
+So the steps would be:
+
+1. Precompute the count of each word in the words array. 
+
+2. For each possible mod (from 0 to w-1), process the string as follows:
+
+   a. Split the string into a list of words of length w, starting at positions i where i mod w == mod. 
+
+   For example, for mod = 0, the words are s[0..w-1], s[w..2w-1], etc. 
+
+   b. For this list, find all windows of size k (since each window represents k words, which is the total number of words in the original array). 
+
+   c. For each such window, check if the count of the words in the window matches the original count. 
+
+   d. If it does, then the starting index of the window in the original string is the starting index of the first word in the window. 
+
+   e. Add this starting index to the result. 
+
+But how to split the string into the list of words for each mod. 
+
+For example, for mod = 0, the words are the substrings starting at positions 0, w, 2w, etc. 
+
+Each of these substrings is of length w. 
+
+So for each mod, the list of words is generated by taking every w-th character, starting at mod. 
+
+Once we have this list, we can apply the sliding window approach. 
+
+So for each mod, the sliding window approach would be:
+
+- The list of words is of length (len(s) - mod) / w. 
+
+- For each window of size k, check if the count matches. 
+
+But how to do this efficiently. 
+
+The sliding window approach for this would be:
+
+- For each window of size k, we can track the count of each word in the current window. 
+
+- If the count matches the original count, then it's a valid window. 
+
+But how to manage the sliding window. 
+
+Let me think. 
+
+For example, for the list of words for a particular mod, we can have a sliding window of size k. 
+
+We can use a hash map (like a dictionary) to track the count of each word in the current window. 
+
+We can start with the first k words, and check if their count matches. 
+
+Then, for each next window, we remove the leftmost word and add the next word. 
+
+This way, we can process each window in O(1) time per step. 
+
+But how to implement this. 
+
+So for each mod, the steps are:
+
+- Generate the list of words for that mod. 
+
+- For example, for mod = 0, the list is [s[0..w-1], s[w..2w-1], ...]
+
+- Then, for this list, we can use a sliding window of size k. 
+
+- For each window, check if the count matches. 
+
+But how to generate the list of words for each mod. 
+
+Let me think. 
+
+For a given mod value, say m, the starting positions are m, m + w, m + 2w, etc. 
+
+Each of these positions is the start of a word of length w. 
+
+So for each position i in the string s, if i mod w == m, then we can take the substring s[i:i + w]. 
+
+But for this, we need to make sure that i + w <= len(s). 
+
+So for each mod, the list of words is generated by taking all substrings of length w starting at positions i where i mod w == m. 
+
+Once we have this list, we can process it with the sliding window approach. 
+
+So the overall approach is:
+
+- Precompute the original count of words. 
+
+- For each mod from 0 to w-1:
+
+   - Generate the list of words for this mod. 
+
+   - If the list is shorter than k, skip. 
+
+   - Else, use sliding window approach to find all windows of size k where the count matches. 
+
+   - For each such window, add the starting index of the first word in the window to the result. 
+
+But how to compute the starting index of the first word in the window. 
+
+For example, the first word in the window is at position i, which is the starting position of the first word in the window. 
+
+But for the mod m, each word in the list is at position i = m + t * w, where t is the index in the list. 
+
+So for the first word in the window, which is at index t in the list, the starting position in the original string is m + t * w. 
+
+So when we find a valid window in the list, the starting index is m + t * w, where t is the starting index of the window in the list. 
+
+But how to compute that. 
+
+For example, the list for mod m is words_list. 
+
+Each element in words_list is a substring of length w. 
+
+The first element in words_list is the substring starting at m. 
+
+The second element is starting at m + w. 
+
+So for a window starting at index t in words_list, the starting index in the original string is m + t * w. 
+
+So when we find a valid window in words_list, we can compute the starting index as m + t * w. 
+
+But how to compute t. 
+
+For example, the window starts at index t in words_list, and has size k. So the starting index in the original string is m + t * w. 
+
+So for each valid window, we add this starting index to the result. 
+
+Now, the problem is to implement this. 
+
+Let me think about the steps in code. 
+
+First, compute the original count. 
+
+Then, for each mod in 0 to w-1:
+
+   generate the list of words for that mod. 
+
+   for example, for mod = m, the words are:
+
+   for i from m to len(s) - w, step w:
+
+      take s[i:i + w]
+
+   then, for this list, process the sliding window. 
+
+But how to generate this list. 
+
+In code, for each mod m, we can loop through the string s, and for each i starting at m, then m + w, etc. 
+
+But for each mod, the maximum possible i is len(s) - w. 
+
+So for each mod, the list is:
+
+words_list = []
+
+for i in range(m, len(s) - w + 1, w):
+
+   words_list.append(s[i:i + w])
+
+But in C++, how to do this. 
+
+But for the code, the steps are:
+
+Compute the length of each word, w. 
+
+If words is empty, return empty. 
+
+But according to constraints, words.length is at least 1. 
+
+Then, for each mod from 0 to w-1:
+
+   generate the list of words for that mod. 
+
+   then, for this list, check for sliding window of size k. 
+
+But how to handle the sliding window. 
+
+Let me think about the sliding window approach. 
+
+For the list of words, the total number of words is len(words_list). 
+
+We need to find all windows of size k. 
+
+For each window, we need to check if the count of words in the window matches the original count. 
+
+So for the sliding window approach, we can use a hash map (like a std::unordered_map) to track the current count of each word in the window. 
+
+We can also have a variable that tracks the number of words that match the original count. 
+
+But how to implement this. 
+
+Let me think. 
+
+The original count is a map, say original_count. 
+
+For the sliding window, we can have a current_count map. 
+
+We can also have a variable that tracks how many words in the current window match the original count. 
+
+For example, for each window, we can check if the current_count matches the original_count. 
+
+But how to do this efficiently. 
+
+An alternative approach is to use a sliding window of size k, and for each window, check if the current_count matches the original_count. 
+
+But for each window, this would take O(k) time. 
+
+But for large k, this could be expensive. 
+
+But perhaps for the problem constraints, it's manageable. 
+
+Alternatively, we can use a sliding window approach where we track the count of each word in the current window, and for each step, add and remove words. 
+
+Let me think. 
+
+For example, for the list of words for a particular mod:
+
+Initialize a current_count map. 
+
+We can start with the first k words. 
+
+For each word in the first k words, we add to current_count. 
+
+Then, check if current_count matches original_count. 
+
+If yes, add the starting index. 
+
+Then, for each next window, we remove the leftmost word and add the next word. 
+
+But how to check if the current_count matches the original_count. 
+
+But for this, we can compare the current_count with the original_count. 
+
+But comparing two maps can be O(n) time. 
+
+But for each window, this would take O(k) time. 
+
+But for large k, this could be expensive. 
+
+But perhaps for the problem constraints, it's manageable. 
+
+Alternatively, we can track the number of words that match the original count. 
+
+But how. 
+
+Let me think. 
+
+Another approach: for each window, the total number of words is k. 
+
+We can have a variable that counts how many words in the current window match the original count. 
+
+But this seems complicated. 
+
+Alternatively, for each window, we can check if the current_count is equal to the original_count. 
+
+But how to do this efficiently. 
+
+In C++, comparing two unordered_maps is possible, but it's O(n) time. 
+
+But for each window, this would take O(k) time. 
+
+But for each mod, the number of windows is O(n/w) * k. 
+
+But perhaps this is manageable. 
+
+But given that the constraints are tight, perhaps there's a better way. 
+
+Alternatively, for each window, we can check if the current_count has the same number of words as the original_count, and that each word in the current_count is present in the original_count. 
+
+But again, this would take O(k) time. 
+
+But given that the code is for a programming problem, perhaps this is acceptable. 
+
+So, putting it all together. 
+
+Now, the code steps:
+
+First, compute the original count. 
+
+Then, for each mod from 0 to w-1:
+
+   generate the list of words for that mod. 
+
+   if the list's size is less than k, skip. 
+
+   else:
+
+      for the list, process sliding window of size k. 
+
+      for each window:
+
+         check if the count of words in the window matches the original count. 
+
+         if yes, add the starting index. 
+
+But how to generate the list of words for each mod. 
+
+In C++, for each mod, we can loop through the string s. 
+
+For example, for mod = m, the starting positions are m, m + w, m + 2w, etc. 
+
+Each of these positions must be such that the substring of length w is within s. 
+
+So for each mod, the code would be:
+
+vector<string> words_list;
+
+for (int i = m; i + w <= s.length(); i += w) {
+
+   words_list.push_back(s.substr(i, w));
+
+}
+
+Then, for this words_list, process the sliding window. 
+
+Now, for the sliding window part. 
+
+Let me think about the code for the sliding window. 
+
+For example, for the words_list, the size is n. 
+
+We need to check all windows of size k. 
+
+For each window, we can check if the count of words in the window matches the original count. 
+
+So, for each window, we can collect the words, and compare their counts. 
+
+But for each window, this would take O(k) time. 
+
+But for large k, this could be expensive. 
+
+But perhaps for the problem constraints, it's manageable. 
+
+But let's think about the worst case. 
+
+Suppose the words are of length 1, and the total_len is 5000. 
+
+Then, for each mod, the words_list is of size O(n). 
+
+But for each window, the code would take O(k) time. 
+
+But for each mod, the number of windows is O(n) (since the words_list is O(n/w) in size). 
+
+So the total time would be O(w * n * k). 
+
+But with w up to 30, and n up to 1e4, and k up to 5e3, this would be 30 * 1e4 * 5e3 = 1.5e9 operations. Which is way too big. 
+
+This would not be efficient enough. 
+
+So this approach may not be feasible for the given constraints. 
+
+So, we need a better approach. 
+
+Alternative idea: for each mod, we can use a sliding window approach that tracks the count of words in the current window. 
+
+We can use a hash map to track the current count. 
+
+We can also track the number of words that match the original count. 
+
+Let me think. 
+
+For example, the original count is a map. 
+
+We can have a current count map. 
+
+We can also have a variable that tracks how many words in the current window match the original count. 
+
+But how to do this. 
+
+Let me think. 
+
+For each window, we can have a count of each word. 
+
+We can compare the current count with the original count. 
+
+But how to do this efficiently. 
+
+Another idea: for each mod, the sliding window approach can be optimized. 
+
+Let me think. 
+
+For the words_list, the sliding window is of size k. 
+
+We can use a sliding window approach where we track the count of each word in the current window. 
+
+We can have a variable that tracks the number of words in the current window that match the original count. 
+
+But how to do this. 
+
+Let me think. 
+
+For example, for each window, we can have a count of each word. 
+
+We can compare the current count with the original count. 
+
+But how to do this. 
+
+Let me think of the following steps for the sliding window:
+
+Initialize a current_count map. 
+
+For the first window (words_list[0 ... k-1]):
+
+   for each word in this window, increment current_count. 
+
+Then, check if current_count matches the original_count. 
+
+If yes, add the starting index. 
+
+Then, for each next window:
+
+   remove the leftmost word (words_list[i]) from current_count. 
+
+   add the next word (words_list[i + k]) to current_count. 
+
+   check if current_count matches original_count. 
+
+But how to check if current_count matches original_count. 
+
+This is the key part. 
+
+But how to do this efficiently. 
+
+An alternative approach is to track the number of words in the current window that match the original count. 
+
+But how. 
+
+Let me think. 
+
+We can have a variable called 'matches' which counts the number of words in the current window that have the same count as in the original count. 
+
+But this seems complicated. 
+
+Alternatively, for each window, we can check if the current_count has the same number of words as the original_count, and that each word in current_count is present in the original_count. 
+
+But again, this requires comparing the two maps. 
+
+But in C++, comparing two unordered_maps is O(n) time. 
+
+But for each window, this would take O(k) time. 
+
+But for large k, this is expensive. 
+
+But perhaps there's a way to optimize this. 
+
+Another idea: for each mod, the words_list is of size m. 
+
+We can precompute the original count. 
+
+Then, for each window, we can check if the current_count is equal to the original_count. 
+
+But how to do this. 
+
+But for each window, the current_count is built incrementally. 
+
+So, for example, when we add a word to the current_count, we can check if it's in the original_count. 
+
+But this seems not helpful. 
+
+Alternatively, for each window, we can have a variable that tracks the number of words in the current window that match the original count. 
+
+But how. 
+
+Let me think. 
+
+The original count is a map. 
+
+For the current window, we can have a map that counts the number of each word. 
+
+We can also have a variable that tracks the number of words in the current window that have the same count as in the original count. 
+
+But how to compute this. 
+
+For example, for each word in the current window, we can check if the count in the current window matches the original count. 
+
+But this seems complicated. 
+
+Alternatively, for each window, the total number of words is k. 
+
+So, for the current window, the sum of the counts in current_count must be equal to k. 
+
+But that's always true. 
+
+But how to check if the current_count matches the original_count. 
+
+Another idea: for each window, the current_count must have exactly the same number of each word as the original_count. 
+
+So, for each word in the original_count, the current_count must have the same count. 
+
+But how to check this. 
+
+In code, for each window, we can iterate through the original_count and check if each word is present in current_count with the same count. 
+
+But this would take O(k) time. 
+
+But again, for large k, this is expensive. 
+
+But perhaps for the problem constraints, this is manageable. 
+
+But given that the code is for a programming problem, perhaps the code can be optimized. 
+
+But given that the code is to be written in C++, perhaps the code can be written with this approach. 
+
+So, putting it all together. 
+
+Now, the code steps:
+
+First, compute the original count. 
+
+Then, for each mod from 0 to w-1:
+
+   generate the words_list. 
+
+   if the words_list.size() < k: continue. 
+
+   then, for the words_list, process the sliding window. 
+
+   for the sliding window:
+
+      current_count is a map. 
+
+      for the first window (0 to k-1):
+
+         for each word in words_list[0 ... k-1], add to current_count. 
+
+         check if current_count matches original_count. 
+
+         if yes, add the starting index. 
+
+      then, for each next window:
+
+         remove the leftmost word (words_list[i]) from current_count. 
+
+         add the next word (words_list[i + k]) to current_count. 
+
+         check if current_count matches original_count. 
+
+         if yes, add the starting index. 
+
+But how to check if current_count matches original_count. 
+
+In code, for each window, we can loop through the original_count and check if each word is present in current_count with the same count. 
+
+But how to do this. 
+
+Alternatively, for each window, we can check if the size of current_count is equal to the size of original_count, and for each key in original_count, the count is the same. 
+
+But this would take O(m) time, where m is the number of unique words in the original_count. 
+
+But for the problem, this is acceptable. 
+
+So, in code, for each window, we can:
+
+   for each word in original_count:
+
+      if current_count[word] != original_count[word], then break. 
+
+   if all match, then it's a valid window. 
+
+But how to implement this. 
+
+But in C++, we can loop through the original_count's keys. 
+
+But for that, we need to have a way to iterate through the keys. 
+
+But for the code, perhaps we can use a hash map. 
+
+So, in code:
+
+for each window:
+
+   valid = true;
+
+   for (auto& pair : original_count) {
+
+      if (current_count.find(pair.first) == current_count.end() || current_count[pair.first] != pair.second) {
+
+          valid = false;
+
+          break;
+
+      }
+
+   }
+
+   if (valid) {
+
+      add the starting index to the result. 
+
+   }
+
+But this would take O(m) time for each window, where m is the number of unique words in the original_count. 
+
+But for the problem, this is acceptable. 
+
+So, putting all this together. 
+
+Now, the code. 
+
+But first, let's think about the edge cases. 
+
+For example, if the words array is empty, but according to the constraints, words.length is at least 1. 
+
+Another case: when the words are of length 0. But according to the constraints, words[i].length is at least 1. 
+
+So, no need to handle that. 
+
+Now, code steps:
+
+Implement the original_count as a map. 
+
+Then, for each mod from 0 to w-1:
+
+   generate the words_list. 
+
+   if words_list.size() < k: continue. 
+
+   then, for the sliding window:
+
+      current_count is a map. 
+
+      for the first window:
+
+         for i from 0 to k-1:
+
+             add words_list[i] to current_count. 
+
+      then check if current_count matches original_count. 
+
+      if yes, add the starting index. 
+
+      then, for each i from 0 to (words_list.size() - k - 1):
+
+          remove words_list[i] from current_count. 
+
+          add words_list[i + k] to current_count. 
+
+          check if current_count matches original_count. 
+
+          if yes, add the starting index. 
+
+But how to compute the starting index. 
+
+For the first window, the starting index is m (the mod) + 0 * w. 
+
+Because the first word in the words_list is at position m. 
+
+For the window starting at index t in the words_list, the starting index in the original string is m + t * w. 
+
+So, for the first window, t is 0. 
+
+So, the starting index is m + 0 * w = m. 
+
+For the next window, when we slide by one, the starting index is m + 1 * w. 
+
+So, for each window, the starting index is m + t * w, where t is the starting index of the window in the words_list. 
+
+So, for the first window, t is 0. 
+
+For the next window, t is 1. 
+
+So, in code, when we process the first window, the starting index is m. 
+
+Then, for each next window, the starting index is m + t * w, where t is the current window's starting index in the words_list. 
+
+So, during the sliding window processing, for each window, the starting index is m + t * w, where t is the index of the first word in the window. 
+
+So, for the first window, t is 0. 
+
+For the second window, t is 1. 
+
+So, during the sliding window processing, for each window, the starting index is m + t * w. 
+
+So, in code, during the sliding window processing, for each window, when we process it, we can compute the starting index as m + t * w. 
+
+But how to track t. 
+
+In the sliding window processing, the first window is from index 0 to k-1. 
+
+The next window is from index 1 to k. 
+
+So, for each window, the starting index in the words_list is t. 
+
+So, for the first window, t is 0. 
+
+For the next window, t is 1. 
+
+So, during the sliding window processing, for each window, the starting index in the words_list is t. 
+
+So, the starting index in the original string is m + t * w. 
+
+So, in code, during the sliding window processing, for each window, we can compute the starting index as m + t * w. 
+
+But how to track t. 
+
+In the sliding window processing, for the first window, t is 0. 
+
+Then, for each next window, t increases by 1. 
+
+So, during the sliding window processing, for each window, the starting index is t. 
+
+So, in code, during the sliding window processing, for each window, the starting index is m + t * w. 
+
+So, in code, for the first window, t is 0. 
+
+Then, for each next window, t is 1, 2, etc. 
+
+So, during the sliding window processing, for each window, the starting index is m + t * w. 
+
+So, in code, during the sliding window processing, for each window, we can compute the starting index as m + t * w. 
+
+Now, the code. 
+
+But how to implement this. 
+
+Let me think about the code. 
+
+First, compute the original count. 
+
+Then, for each mod in 0 to w-1:
+
+   generate the words_list. 
+
+   if words_list.size() < k: continue. 
+
+   then, for the sliding window:
+
+      current_count is a map. 
+
+      for the first window:
+
+         for i in 0 to k-1:
+
+             add words_list[i] to current_count. 
+
+      check if current_count matches original_count. 
+
+      if yes, add m + 0 * w to the result. 
+
+      then, for i from 0 to (words_list.size() - k - 1):
+
+          remove words_list[i] from current_count. 
+
+          add words_list[i + k] to current_count. 
+
+          check if current_count matches original_count. 
+
+          if yes, add m + (i+1) * w to the result. 
+
+But how to implement this. 
+
+But in code, the sliding window processing can be done as follows. 
+
+Now, the code. 
+
+But first, the code for the original count. 
+
+In C++, we can use a map (unordered_map) for the original count. 
+
+Then, for each mod, generate the words_list. 
+
+Then, for the sliding window. 
+
+But for the sliding window, we need to track the current_count. 
+
+But for each mod, the words_list is generated. 
+
+Now, code steps:
+
+Implement the function findSubstring. 
+
+Inside the function:
+
+First, check if words is empty. But according to constraints, words.length >= 1. 
+
+Compute the length of each word: w = words[0].length(). 
+
+Compute k = words.size(). 
+
+total_len = k * w. 
+
+If the length of s is less than total_len, return empty vector. 
+
+Then, create the original_count map. 
+
+Then, for each mod from 0 to w-1:
+
+   generate the words_list. 
+
+   if words_list.size() < k: continue. 
+
+   then, process the sliding window. 
+
+   for the sliding window:
+
+      current_count is a map. 
+
+      for the first window:
+
+         for i from 0 to k-1:
+
+             add words_list[i] to current_count. 
+
+      check if current_count matches original_count. 
+
+      if yes, add the starting index. 
+
+      then, for each next window:
+
+         remove the leftmost word (words_list[i]) 
+
+         add the next word (words_list[i + k])
+
+         check if current_count matches original_count. 
+
+         if yes, add the starting index. 
+
+But how to implement this. 
+
+Now, code for the sliding window. 
+
+But in C++, for each mod, the code would be:
+
+for (int m = 0; m < w; ++m) {
+
+   vector<string> words_list;
+
+   for (int i = m; i + w <= s.length(); i += w) {
+
+       words_list.push_back(s.substr(i, w));
+
+   }
+
+   if (words_list.size() < k) continue;
+
+   // process sliding window for this words_list
+
+   unordered_map<string, int> current_count;
+
+   for (int i = 0; i < k; ++i) {
+
+       current_count[words_list[i]]++;
+
+   }
+
+   // check if current_count matches original_count
+
+   bool valid = true;
+
+   for (auto& pair : original_count) {
+
+       if (current_count.find(pair.first) == current_count.end() || current_count[pair.first] != pair.second) {
+
+           valid = false;
+
+           break;
+
+       }
+
+   }
+
+   if (valid) {
+
+       result.push_back(m);
+
+   }
+
+   for (int i = 1; i <= words_list.size() - k; ++i) {
+
+       // remove the leftmost word (words_list[i-1])
+
+       current_count[words_list[i-1]]--;
+
+       if (current_count[words_list[i-1]] == 0) {
+
+           current_count.erase(words_list[i-1]);
+
+       }
+
+       // add the new word (words_list[i + k - 1])
+
+       current_count[words_list[i + k - 1]]++;
+
+       // check if current_count matches original_count
+
+       valid = true;
+
+       for (auto& pair : original_count) {
+
+           if (current_count.find(pair.first) == current_count.end() || current_count[pair.first] != pair.second) {
+
+               valid = false;
+
+               break;
+
+           }
+
+       }
+
+       if (valid) {
+
+           result.push_back(m + i * w);
+
+       }
+
+   }
+
+}
+
+Wait, but the starting index for the window is m + i * w. 
+
+Wait, for the first window, the starting index is m. 
+
+Then, for the next window, the starting index is m + w. 
+
+But in the code above, for the first window, i is 0. 
+
+Then, for the next window, i is 1. 
+
+But the starting index is m + i * w. 
+
+Wait, the first window is from index 0 to k-1 in words_list. 
+
+The starting index in the original string is m. 
+
+Then, for the next window, the starting index is m + w. 
+
+Because the next window starts at index 1 in words_list. 
+
+Each word in words_list is of length w, and the words_list is generated by taking every w-th character. 
+
+So, the starting index for the window starting at index t in words_list is m + t * w. 
+
+So, for the first window, t is 0. 
+
+For the next window, t is 1. 
+
+So, during the sliding window processing, for each window, the starting index is m + t * w. 
+
+But in the code above, during the loop for i from 1 to ...:
+
+the starting index is m + i * w. 
+
+But wait, the first window is processed, then for each i in 1 to ... 
+
+But the code for the sliding window is:
+
+for (int i = 1; i <= words_list.size() - k; ++i) {
+
+   remove words_list[i-1]
+
+   add words_list[i + k - 1]
+
+   check if valid. 
+
+   if valid, add m + i * w. 
+
+}
+
+But why i + k -1? 
+
+Because the current window starts at i-th position in words_list. 
+
+Wait, the first window is from 0 to k-1. 
+
+Then, the next window is from 1 to k. 
+
+So, for the i-th window (starting at i in words_list), the window is from i to i + k -1. 
+
+So, when we are processing the i-th window, the new word added is words_list[i + k -1]. 
+
+But in the code above, the loop is for i from 1 to ... 
+
+But the code for the sliding window is:
+
+for (int i = 1; i <= words_list.size() - k; ++i) {
+
+   remove words_list[i-1]
+
+   add words_list[i + k -1]
+
+}
+
+But the words_list.size() - k is the maximum number of windows. 
+
+Wait, the number of possible windows is (words_list.size() - k + 1). 
+
+But the first window is processed, then the next windows are from i=1 to (words_list.size() - k). 
+
+Wait, the loop for i in 1 to (words_list.size() - k) ?
+
+Wait, the number of windows is (words_list.size() - k + 1). 
+
+The first window is i=0. 
+
+Then, the next windows are i=1, 2, ..., (words_list.size() - k). 
+
+So, the loop for i from 1 to (words_list.size() - k) ?
+
+But in code, the loop is for i from 1 to (words_list.size() - k). 
+
+But how to compute the upper limit. 
+
+The maximum i for the sliding window is (words_list.size() - k). 
+
+Because the window starts at i, and ends at i + k -1. 
+
+So, the maximum i is (words_list.size() - k). 
+
+So, the loop for i from 1 to (words_list.size() - k). 
+
+But in code, the loop is:
+
+for (int i = 1; i <= words_list.size() - k; ++i) 
+
+But in C++, the loop is written as:
+
+for (int i = 1; i <= (words_list.size() - k); ++i) 
+
+But words_list.size() - k is the maximum i. 
+
+But in code, the loop would be:
+
+for (int i = 1; i <= (words_list.size() - k); ++i) 
+
+But in the code, the first window is processed, then for each i from 1 to (words_list.size() - k), we process the next window. 
+
+But the number of such i is (words_list.size() - k) - 1 + 1 = words_list.size() -k. 
+
+But the total number of windows is (words_list.size() -k +1). 
+
+So, the first window is processed, then the next (words_list.size() -k) windows. 
+
+So, the code for the sliding window is:
+
+after the first window, for each i from 1 to (words_list.size() -k) ?
+
+But in code, the loop is:
+
+for (int i = 1; i <= words_list.size() -k; ++i) 
+
+But words_list.size() -k is the maximum i. 
+
+But for example, if words_list.size() is 5 and k is 2, then words_list.size() -k is 3. 
+
+So, the loop runs for i=1, 2, 3. 
+
+Which is 3 iterations. 
+
+But the total number of windows after the first is 3. 
+
+So, the code is correct. 
+
+But in the code, when i is 1, the new window starts at i=1. 
+
+So, the starting index is m + i * w. 
+
+But in the code, the starting index is m + i * w. 
+
+But for the first window, the starting index is m + 0 * w = m. 
+
+Then, for the next window, i=1, the starting index is m + 1 * w. 
+
+Which is correct. 
+
+So, the code for the starting index is m + i * w. 
+
+But in the code, during the loop, the starting index is added as m + i * w. 
+
+But in the code, the loop is for i from 1 to ... 
+
+But the first window is processed, then for each i in the loop, the starting index is m + i * w. 
+
+But wait, the first window is processed, and then the next windows are processed. 
+
+So, the code for the first window adds m. 
+
+Then, for each i in the loop, the starting index is m + i * w. 
+
+But in the code, the loop is for i from 1 to ... 
+
+But the first window is i=0. 
+
+So, the code for the first window is handled before the loop. 
+
+So, the code for the first window adds m. 
+
+Then, for each i in the loop, the starting index is m + i * w. 
+
+But in the code, the loop is for i from 1 to ... 
+
+But the code for the loop is:
+
+for (int i = 1; i <= words_list.size() -k; ++i) {
+
+   ... 
+
+   if (valid) {
+
+       result.push_back(m + i * w);
+
+   }
+
+}
+
+But this is correct. 
+
+Now, the code for the sliding window. 
+
+But there's a problem: when we remove the leftmost word, we need to decrement the count. 
+
+But in the code, when we remove words_list[i-1], we need to check if the count is zero. 
+
+For example, if the current_count for that word is 1, then after decrementing, it becomes zero, and we can erase it from the map. 
+
+This is important to avoid having entries with zero count. 
+
+So, in code:
+
+current_count[words_list[i-1]]--;
+
+if (current_count[words_list[i-1]] == 0) {
+
+   current_count.erase(words_list[i-1]);
+
+}
+
+But in C++, when you decrement, you have to make sure that the key exists. 
+
+But since we are removing the leftmost word, which was part of the current_count, it must exist. 
+
+So, this code is safe. 
+
+Now, the code for the original_count. 
+
+In C++, the original_count can be a unordered_map<string, int>. 
+
+So, for the words array, we can create this map. 
+
+But for the code, we need to loop through the words array and count each occurrence. 
+
+So, in code:
+
+unordered_map<string, int> original_count;
+
+for (string word : words) {
+
+   original_count[word]++;
+
+}
+
+Now, putting all this together. 
+
+But what about the case when the words have different lengths? 
+
+But according to the problem statement, all words are of the same length. 
+
+So, the code can assume that all words have the same length. 
+
+So, the code can proceed. 
+
+Now, the code for the function. 
+
+But in C++, the code must include the necessary headers. 
+
+The given code includes <vector>, <string>, and using namespace std. 
+
+So, the code will need to include <unordered_map> for the maps. 
+
+So, the code will need to include:
+
+#include <vector>
+#include <string>
+#include <unordered_map>
+using namespace std;
+
+vector<int> findSubstring(string s, vector<string>& words) {
+
+   // code here
+
+}
+
+But the code must include all necessary headers. 
+
+So, the code will need to include <unordered_map> and <algorithm> for the loops. 
+
+But the code given in the problem includes only <vector> and <string>. 
+
+So, the code must include the necessary headers. 
+
+So, the code will need to include:
+
+#include <vector>
+#include <string>
+#include <unordered_map>
+using namespace std;
+
+But the code must not have any other includes. 
+
+So, the code will have to include those. 
+
+Now, putting all this together. 
+
+Now, the code:
+
+#include <vector>
+#include <string>
+#include <unordered_map>
+using namespace std;
+
+vector<int> findSubstring(string s, vector<string>& words) {
+    int w = words[0].length();
+    int k = words.size();
+    int total_len = k * w;
+    vector<int> result;
+    unordered_map<string, int> original_count;
+    for (string word : words) {
+        original_count[word]++;
+    }
+    for (int m = 0; m < w; ++m) {
+        vector<string> words_list;
+        for (int i = m; i + w <= s.length(); i += w) {
+            words_list.push_back(s.substr(i, w));
+        }
+        if (words_list.size() < k) continue;
+        unordered_map<string, int> current_count;
+        for (int i = 0; i < k; ++i) {
+            current_count[words_list[i]]++;
+        }
+        // check first window
+        bool valid = true;
+        for (auto& pair : original_count) {
+            if (current_count.find(pair.first) == current_count.end() || current_count[pair.first] != pair.second) {
+                valid = false;
+                break;
+            }
+        }
+        if (valid) {
+            result.push_back(m);
+        }
+        for (int i = 1; i <= words_list.size() - k; ++i) {
+            // remove the leftmost word
+            string left = words_list[i - 1];
+            current_count[left]--;
+            if (current_count[left] == 0) {
+                current_count.erase(left);
+            }
+            // add the new word
+            string right = words_list[i + k - 1];
+            current_count[right]++;
+            // check validity
+            valid = true;
+            for (auto& pair : original_count) {
+                if (current_count.find(pair.first) == current_count.end() || current_count[pair.first] != pair.second) {
+                    valid = false;
+                    break;
+                }
+            }
+            if (valid) {
+                result.push_back(m + i * w);
+            }
+        }
+    }
+    return result;
+}
+
+Wait, but in the code, the loop for i from 1 to ... 
+
+But in the code, the loop is:
+
+for (int i = 1; i <= words_list.size() - k; ++i) 
+
+But words_list.size() - k is the maximum value of i. 
+
+But for example, if words_list.size() is 5 and k is 2, then words_list.size() -k is 3. 
+
+So, the loop runs for i=1, 2, 3. 
+
+But the number of windows after the first is 3. 
+
+But the total number of windows is (words_list.size() -k +1). 
+
+So, the first window is processed, then the next (words_list.size() -k) windows. 
+
+But the code for the loop is correct. 
+
+But what about the case when words_list.size() -k is zero? 
+
+For example, if words_list.size() ==k, then words_list.size() -k is zero. 
+
+So, the loop runs for i=1 to 0, which is not executed. 
+
+Which is correct. 
+
+Now, testing the code against the examples. 
+
+Example 1:
+
+s = "barfoothefoobarman", words = ["foo","bar"]
+
+w = 3, k=2, total_len=6. 
+
+original_count is {"foo":1, "bar":1}
+
+For mod=0:
+
+words_list is generated for i=0, 3, 6, 9, 12, 15, 18, etc. 
+
+But s is "barfoothefoobarman" which has length 16. 
+
+So for mod=0:
+
+i starts at 0, then 3, 6, 9, 12, 15. 
+
+Each i +w must be <= len(s). 
+
+len(s) is 16. 
+
+i=0: 0+3=3 <=16. 
+
+i=3: 3+3=6 <=16. 
+
+i=6: 6+3=9 <=16. 
+
+i=9: 9+3=12 <=16. 
+
+i=12: 12+3=15 <=16. 
+
+i=15: 15+3=18 >16. So stop. 
+
+So words_list for mod=0 is:
+
+s[0:3] = "bar", s[3:6] = "foo", s[6:9] = "the", s[9:12] = "foo", s[12:15] = "bar", s[15:18] is out of range. 
+
+So words_list is ["bar", "foo", "the", "foo", "bar"]. 
+
+k=2. 
+
+So words_list.size() is 5. 
+
+So for the first window (i=0 to 1):
+
+words_list[0] = "bar", words_list[1] = "foo". 
+
+current_count is {"bar":1, "foo":1} → matches original_count. 
+
+So add m=0. 
+
+Then, for i=1:
+
+remove words_list[0] ("bar") → current_count["bar"] becomes 0 → erase. 
+
+Add words_list[1 + 2 -1] = words_list[2] → "the". 
+
+current_count is {"foo":1, "the":1} → which does not match original_count. 
+
+So not added. 
+
+Then, for i=2:
+
+remove words_list[

@@ -1,0 +1,811 @@
+<think>
+Okay, I need to solve this Sudoku problem. Let me think about how to approach it. The problem says to fill the empty cells following Sudoku rules. The input is a 9x9 grid where '.' represents empty cells. The output should be the solved grid.
+
+First, I remember that Sudoku solving typically involves backtracking. Because for each empty cell, we try possible numbers and backtrack if a conflict occurs. But how to implement this efficiently?
+
+So the main steps would be: find an empty cell, try numbers from 1-9 that are valid, and recursively solve the next empty cell. If a conflict arises, backtrack.
+
+But how to check if a number is valid in the current cell? For that, I need to check the row, column, and the 3x3 sub-box.
+
+Let me think about the helper functions. Maybe a function to check if placing a number in a specific position is valid. Let's say, is_valid(int row, int col, char num, vector<vector<char>>& board). Wait, but in C++, the board is a vector of vectors. So I need to check the row, column, and sub-box.
+
+For the row check: iterate through each cell in the row and see if it's equal to num. Similarly for column. For the sub-box, the starting row and column would be (row / 3) * 3 and (col / 3) * 3. Then check all cells in that 3x3 box.
+
+Once I have that helper function, the backtracking approach can proceed.
+
+But how to find the next empty cell? Maybe in the solve function, we can find the next empty cell (the first one) and then try numbers. But for efficiency, it's better to find the next empty cell each time. However, in the worst case, it's O(n^2) for each step, but given that Sudoku has only 9x9 cells, it's manageable.
+
+So the plan is:
+
+1. Find the next empty cell (row, col). If there's no empty cell, the Sudoku is solved.
+2. For each possible number (1-9), check if it's valid in that cell.
+3. If valid, place the number and recursively call solveSudoku.
+4. If the recursion returns true (meaning a solution was found), return true. Otherwise, backtrack by resetting the cell to '.'.
+
+But how to implement this in C++?
+
+The function solveSudoku will need to modify the board. So the helper functions will need to take the board as a reference.
+
+Wait, the function signature is given as void solveSudoku(...), so the function will modify the board in place.
+
+So the steps for the solveSudoku function:
+
+- Find the next empty cell. Let's say we have a helper function to find the first empty cell. If there's no empty cell, return.
+- For each possible number (1-9), check if it's valid.
+- If valid, place the number, and recursively call solveSudoku.
+- If the recursion returns true, then return true. Otherwise, backtrack by setting the cell back to '.'.
+
+But how to implement the helper function to find the next empty cell. Let's think: iterate through each row and column, check if the cell is '.'.
+
+But for efficiency, maybe we can find the next empty cell in the order of rows first, then columns. So for each row, check each column. Once found, return the position.
+
+So the helper function could be something like:
+
+bool find_empty_cell(int& row, int& col, vector<vector<char>>& board) {
+    for (row = 0; row < 9; row++) {
+        for (col = 0; col < 9; col++) {
+            if (board[row][col] == '.') {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+Wait, but in the backtracking approach, we need to find the next empty cell each time. So in the solveSudoku function, we can call this helper to find the next empty cell. If there's no empty cell, then the Sudoku is solved.
+
+So the main loop would be:
+
+while (there is an empty cell) {
+    find the next empty cell (row, col)
+    for each possible number from 1-9:
+        if valid:
+            place the number
+            recursively call solveSudoku
+            if the call returns true, then return true
+            else, backtrack (set cell to '.')
+    return false
+}
+
+But how to implement this in C++? Because the function solveSudoku is supposed to modify the board. So the helper function to find the next empty cell would be part of the solveSudoku function.
+
+Wait, but in C++, the function solveSudoku is called recursively. So each time, we need to find the next empty cell. So the code structure would be:
+
+void solveSudoku(vector<vector<char>>& board) {
+    // find the next empty cell
+    int row, col;
+    if (!find_empty_cell(row, col, board)) {
+        // no empty cell, done
+        return;
+    }
+    // try numbers 1-9
+    for (int num = 1; num <=9; num++) {
+        if (is_valid(row, col, num, board)) {
+            board[row][col] = num + '0';
+            solveSudoku(board);
+            if (board is solved) {
+                return;
+            }
+            board[row][col] = '.';
+        }
+    }
+}
+
+Wait, but how to check if the board is solved? Because once the solveSudoku function is called recursively, and if it returns, then the board is solved. But in the code above, the function is called recursively. So when the base case is reached (no empty cells), the function returns. So in the code, after placing a number, we call solveSudoku. If that call returns, then the board is solved. So in that case, we can return. But how to know that the board is solved? Because the function solveSudoku is called recursively, and if the board is solved, then the function will return. So in the code, after placing a number, we call solveSudoku, and if it returns, then the board is solved. So in that case, we can return from the current call.
+
+Wait, but the code structure would be:
+
+In the solveSudoku function, after placing a number, we call solveSudoku again. If that call returns, then the board is solved. So in that case, the current call can return. But how to know that the board is solved? Because the function solveSudoku is called recursively, and if the board is solved, then the function will return. So in the code, after the recursive call, if the function returns, then the board is solved. So in that case, we can return from the current function.
+
+Wait, but the code is in a loop. So for example, when we place a number, call solveSudoku, and if that returns, then the board is solved. So in that case, the current function can return. But how to check that? Because the function solveSudoku is called recursively, and if the board is solved, then the function returns. So in the code, after the recursive call, we can check if the board is solved. But how?
+
+Alternatively, the code can be structured as follows: the solveSudoku function returns a boolean indicating whether the board is solved. But the original problem requires that the function solveSudoku modifies the board in place. So perhaps the function should return a boolean, and the main function (which is not written here) can check that. But in the given code, the function is void. So perhaps the code can be modified to return a boolean, but the problem says that the function signature is given as void. So perhaps the code can be written with a helper function that returns a boolean, and the main solveSudoku function calls it.
+
+Wait, but the problem says that the code must be written as a function that solves the Sudoku. So perhaps the code can be written with a helper function that returns a boolean, and the main solveSudoku function calls it. But the given code is void solveSudoku(...). So perhaps the code can be written with a helper function that returns a boolean, and the main function calls it. But how to structure that.
+
+Alternatively, the code can be written with a helper function that returns a boolean, and the main function uses that. But since the problem says that the code must be written as the given function, perhaps the code can be written with a helper function that returns a boolean, and the main function uses that.
+
+But in the given code, the function is void. So perhaps the code can be written as follows:
+
+Inside solveSudoku, we find the next empty cell. Then, for each possible number, check if it's valid. If valid, place it, and then call solveSudoku again. If the call returns true, then return. Otherwise, backtrack.
+
+But how to structure this. Let me think.
+
+The code for solveSudoku would be:
+
+void solveSudoku(vector<vector<char>>& board) {
+    // find the next empty cell
+    int row, col;
+    if (!find_empty_cell(row, col, board)) {
+        return; // no empty cells, done
+    }
+    for (int num = 1; num <=9; num++) {
+        if (is_valid(row, col, num, board)) {
+            board[row][col] = num + '0';
+            solveSudoku(board);
+            if (board is solved) {
+                return;
+            }
+            board[row][col] = '.';
+        }
+    }
+}
+
+But how to check if the board is solved. Because the function solveSudoku is called recursively. So when the board is solved, the function will return. So in the code, after placing a number, we call solveSudoku. If that call returns, then the board is solved. So in that case, the current call can return. But how to know that the board is solved. Because the function solveSudoku is called recursively, and if the board is solved, then the function returns. So in the code, after the recursive call, the code can check if the board is solved. But how?
+
+Wait, the code for the solveSudoku function is called recursively. So when the board is filled, the function returns. So in the code, after placing a number, we call solveSudoku. If that call returns, then the board is solved. So in that case, the current function can return. But how to know that the board is solved. Because the function solveSudoku is called recursively, and if the board is solved, then the function returns. So in the code, after the recursive call, the code can check if the board is solved. But how to check that. Because the function solveSudoku is called recursively, and if the board is solved, then the function returns. So in the code, after the recursive call, the code can check if the board is solved. But how to check that. Because the function solveSudoku is called recursively, and the code can't know if the board is solved unless the function returns. So perhaps the code can be modified to return a boolean, indicating whether the board is solved. But the original function is void. So perhaps the code can be written with a helper function that returns a boolean, and the main function uses that.
+
+So here's the plan:
+
+- The solveSudoku function will call a helper function that returns a boolean, indicating whether the board is solved.
+
+But the problem says that the function signature is given as void solveSudoku(...). So perhaps the code can be written with a helper function that returns a boolean, and the main function uses that. But how to structure that.
+
+Let me think. The code can have a helper function that returns a boolean. Let's say, the helper function is called backtrack, which returns whether the board is solved. Then, in the main solveSudoku function, we call this helper function.
+
+But the main solveSudoku function is supposed to modify the board. So the code would be:
+
+void solveSudoku(vector<vector<char>>& board) {
+    backtrack(board);
+}
+
+bool backtrack(vector<vector<char>>& board) {
+    // find next empty cell
+    int row, col;
+    if (!find_empty_cell(...)) {
+        return true; // no empty cells, solved
+    }
+    for (int num = 1; num <=9; num++) {
+        if (is_valid(...)) {
+            board[row][col] = num + '0';
+            if (backtrack(board)) {
+                return true;
+            }
+            board[row][col] = '.';
+        }
+    }
+    return false;
+}
+
+But in this case, the backtrack function returns true if the board is solved. So the main solveSudoku function calls backtrack, which returns true if the board is solved. But the main function is void. So the code can be written as:
+
+But the problem says that the code must be written as the given function. So the code can be written with the helper function inside the solveSudoku function. But in C++, functions can't be nested. So perhaps the code can have the helper functions inside the solveSudoku function. But no, in C++, you can't have nested functions. So the code must have the helper functions as separate functions.
+
+But the code must not have a main function, and must not wrap the solution in a class. So the code can have helper functions.
+
+So the code will have:
+
+- is_valid function: checks if placing a number in (row, col) is valid.
+
+- find_empty_cell function: returns whether there is an empty cell, and returns the row and col.
+
+But in C++, the helper functions can be written inside the solveSudoku function? No, but in C++, functions can't be nested. So the code must have the helper functions as separate functions.
+
+But the code must be written as a single function. Wait, the problem says that the code must be written as the given function, plus any helper functions it needs. So the code can have helper functions.
+
+So the code will have:
+
+#include <vector>
+using namespace std;
+
+void solveSudoku(vector<vector<char>>& board) {
+    // code here
+}
+
+But the helper functions can be written inside the solveSudoku function? No. So the code must have the helper functions as separate functions.
+
+So the code will have:
+
+#include <vector>
+using namespace std;
+
+bool is_valid(int row, int col, char num, vector<vector<char>>& board) {
+    // check row
+    for (int i = 0; i < 9; i++) {
+        if (board[row][i] == num) {
+            return false;
+        }
+    }
+    // check column
+    for (int i = 0; i < 9; i++) {
+        if (board[i][col] == num) {
+            return false;
+        }
+    }
+    // check sub-box
+    int start_row = row - row % 3;
+    int start_col = col - col % 3;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (board[start_row + i][start_col + j] == num) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool find_empty(int& row, int& col, vector<vector<char>>& board) {
+    for (row = 0; row < 9; row++) {
+        for (col = 0; col < 9; col++) {
+            if (board[row][col] == '.') {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void solveSudoku(vector<vector<char>>& board) {
+    // code here
+}
+
+Wait, but the code must not have a main function. So the code can have these helper functions.
+
+But the problem says that the code must be written as the given function. So the code must have the solveSudoku function, and the helper functions.
+
+But the code must be written as a single code block. So the code will have the helper functions inside the code.
+
+But in C++, the helper functions can be written outside the solveSudoku function.
+
+So putting it all together:
+
+The code will have the helper functions is_valid and find_empty, and the solveSudoku function.
+
+But the code must be written as a code block. So the code will be:
+
+#include <vector>
+using namespace std;
+
+bool is_valid(int row, int col, char num, vector<vector<char>>& board) {
+    // check row
+    for (int i = 0; i < 9; i++) {
+        if (board[row][i] == num) {
+            return false;
+        }
+    }
+    // check column
+    for (int i = 0; i < 9; i++) {
+        if (board[i][col] == num) {
+            return false;
+        }
+    }
+    // check sub-box
+    int start_row = row - row % 3;
+    int start_col = col - col % 3;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (board[start_row + i][start_col + j] == num) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool find_empty(int& row, int& col, vector<vector<char>>& board) {
+    for (row = 0; row < 9; row++) {
+        for (col = 0; col < 9; col++) {
+            if (board[row][col] == '.') {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void solveSudoku(vector<vector<char>>& board) {
+    int row, col;
+    while (find_empty(row, col, board)) {
+        for (int num = 1; num <= 9; num++) {
+            char num_char = '0' + num;
+            if (is_valid(row, col, num_char, board)) {
+                board[row][col] = num_char;
+                solveSudoku(board);
+                if (!find_empty(row, col, board)) {
+                    return;
+                }
+                board[row][col] = '.';
+            }
+        }
+        return;
+    }
+}
+
+Wait, but this code may not work. Because the find_empty function is called in a loop. Let me think about the structure.
+
+The solveSudoku function is called recursively. But in the code above, the while loop checks for an empty cell. But in the code, the function is called recursively. So for example, when the function is called, it finds the next empty cell, and tries to fill it. But the code may not be correct.
+
+Wait, the code for solveSudoku is:
+
+void solveSudoku(vector<vector<char>>& board) {
+    int row, col;
+    while (find_empty(row, col, board)) {
+        for (int num = 1; num <=9; num++) {
+            char num_char = '0' + num;
+            if (is_valid(...)) {
+                board[row][col] = num_char;
+                solveSudoku(board);
+                if (!find_empty(...)) {
+                    return;
+                }
+                board[row][col] = '.';
+            }
+        }
+        return;
+    }
+}
+
+But this code is not correct. Because the while loop will find the next empty cell, and then for each possible number, try to fill it. But the code is not correct. Because the solveSudoku function is called recursively, but the code is not structured properly.
+
+Wait, the code for the solveSudoku function is supposed to find the next empty cell, and then try to fill it. But the code above is in a while loop. But the code is not correct. Because the while loop will find the next empty cell, and then for each possible number, try to fill it. But the code is not structured as a backtracking approach.
+
+Let me think again. The correct approach is to find the next empty cell, and then try numbers. So the code should be:
+
+Inside solveSudoku:
+
+Find the next empty cell. If there is none, return.
+
+Then, for each possible number:
+
+Check if it's valid. If yes, place it, and call solveSudoku again. If the call returns true, then return. Else, backtrack.
+
+But in the code above, the while loop is not correct. Because the code is in a while loop that finds the next empty cell, and then tries to fill it. But the code is not structured as a recursive backtracking approach.
+
+So the correct code would be:
+
+void solveSudoku(vector<vector<char>>& board) {
+    int row, col;
+    if (!find_empty(row, col, board)) {
+        return; // no empty cells, done
+    }
+    for (int num = 1; num <=9; num++) {
+        char num_char = '0' + num;
+        if (is_valid(row, col, num_char, board)) {
+            board[row][col] = num_char;
+            solveSudoku(board);
+            if (find_empty(row, col, board)) {
+                // the board is not solved, so backtrack
+                board[row][col] = '.';
+            }
+        }
+    }
+}
+
+Wait, but this code is not correct. Because after placing a number, the code calls solveSudoku again. If the solveSudoku returns, then the code checks if there is an empty cell. If there is, then it backtracks. But this code may not work. Because the find_empty function is called again. But in the code, the solveSudoku function is called recursively, and the code may not be structured properly.
+
+Alternatively, the code can be written with a helper function that returns a boolean, indicating whether the board is solved. So the code would be:
+
+bool backtrack(vector<vector<char>>& board) {
+    int row, col;
+    if (!find_empty(row, col, board)) {
+        return true; // no empty cells, solved
+    }
+    for (int num = 1; num <=9; num++) {
+        char num_char = '0' + num;
+        if (is_valid(row, col, num_char, board)) {
+            board[row][col] = num_char;
+            if (backtrack(board)) {
+                return true;
+            }
+            board[row][col] = '.';
+        }
+    }
+    return false;
+}
+
+void solveSudoku(vector<vector<char>>& board) {
+    backtrack(board);
+}
+
+But the problem says that the code must be written as the given function. So the code must have the solveSudoku function, and the helper functions.
+
+So the code would be:
+
+#include <vector>
+using namespace std;
+
+bool is_valid(int row, int col, char num, vector<vector<char>>& board) {
+    // check row
+    for (int i = 0; i < 9; i++) {
+        if (board[row][i] == num) {
+            return false;
+        }
+    }
+    // check column
+    for (int i = 0; i < 9; i++) {
+        if (board[i][col] == num) {
+            return false;
+        }
+    }
+    // check sub-box
+    int start_row = row - row % 3;
+    int start_col = col - col % 3;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (board[start_row + i][start_col + j] == num) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool find_empty(int& row, int& col, vector<vector<char>>& board) {
+    for (row = 0; row < 9; row++) {
+        for (col = 0; col < 9; col++) {
+            if (board[row][col] == '.') {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void solveSudoku(vector<vector<char>>& board) {
+    // call the backtrack function
+    function<bool(vector<vector<char>>&)> backtrack = [&board](vector<vector<char>>& b) {
+        int row, col;
+        if (!find_empty(row, col, b)) {
+            return true;
+        }
+        for (int num = 1; num <=9; num++) {
+            char num_char = '0' + num;
+            if (is_valid(row, col, num_char, b)) {
+                b[row][col] = num_char;
+                if (backtrack(b)) {
+                    return true;
+                }
+                b[row][col] = '.';
+            }
+        }
+        return false;
+    };
+    backtrack(board);
+}
+
+Wait, but in C++, you can't have a lambda inside a function. Or can you? Well, the code can't have a lambda inside the solveSudoku function. So perhaps the code can have a helper function called backtrack, which is a separate function.
+
+But the code must not have a main function. So the code can be written as:
+
+#include <vector>
+using namespace std;
+
+bool is_valid(int row, int col, char num, vector<vector<char>>& board) {
+    // check row
+    for (int i = 0; i < 9; i++) {
+        if (board[row][i] == num) {
+            return false;
+        }
+    }
+    // check column
+    for (int i = 0; i < 9; i++) {
+        if (board[i][col] == num) {
+            return false;
+        }
+    }
+    // check sub-box
+    int start_row = row - row % 3;
+    int start_col = col - col % 3;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (board[start_row + i][start_col + j] == num) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool find_empty(int& row, int& col, vector<vector<char>>& board) {
+    for (row = 0; row < 9; row++) {
+        for (col = 0; col < 9; col++) {
+            if (board[row][col] == '.') {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void solveSudoku(vector<vector<char>>& board) {
+    // call the backtrack function
+    bool backtrack(vector<vector<char>>& board) {
+        int row, col;
+        if (!find_empty(row, col, board)) {
+            return true;
+        }
+        for (int num = 1; num <=9; num++) {
+            char num_char = '0' + num;
+            if (is_valid(row, col, num_char, board)) {
+                board[row][col] = num_char;
+                if (backtrack(board)) {
+                    return true;
+                }
+                board[row][col] = '.';
+            }
+        }
+        return false;
+    }
+    backtrack(board);
+}
+
+Wait, but in C++, you can't define a function inside another function. So this code is invalid. So the code must have the backtrack function as a separate function. But then, how to pass the board to it.
+
+So the code can be written as:
+
+#include <vector>
+using namespace std;
+
+bool is_valid(int row, int col, char num, vector<vector<char>>& board) {
+    // check row
+    for (int i = 0; i < 9; i++) {
+        if (board[row][i] == num) {
+            return false;
+        }
+    }
+    // check column
+    for (int i = 0; i < 9; i++) {
+        if (board[i][col] == num) {
+            return false;
+        }
+    }
+    // check sub-box
+    int start_row = row - row % 3;
+    int start_col = col - col % 3;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (board[start_row + i][start_col + j] == num) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool find_empty(int& row, int& col, vector<vector<char>>& board) {
+    for (row = 0; row < 9; row++) {
+        for (col = 0; col < 9; col++) {
+            if (board[row][col] == '.') {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool backtrack(vector<vector<char>>& board) {
+    int row, col;
+    if (!find_empty(row, col, board)) {
+        return true;
+    }
+    for (int num = 1; num <=9; num++) {
+        char num_char = '0' + num;
+        if (is_valid(row, col, num_char, board)) {
+            board[row][col] = num_char;
+            if (backtrack(board)) {
+                return true;
+            }
+            board[row][col] = '.';
+        }
+    }
+    return false;
+}
+
+void solveSudoku(vector<vector<char>>& board) {
+    backtrack(board);
+}
+
+But this code would have the backtrack function, which is called from solveSudoku. But the code is correct.
+
+But the problem says that the code must not have a main function. So this code is acceptable.
+
+But the code must be written as a code block. So the code will have the helper functions and the solveSudoku function.
+
+But the code must not have any other functions except the solveSudoku function. Wait, no. The code can have helper functions. So the code is correct.
+
+But the code for the solveSudoku function is as follows.
+
+Now, let's think about the code. The backtrack function is called from solveSudoku. The backtrack function tries to fill the board. It finds the next empty cell, and for each possible number, tries to fill it. If it returns true, then the board is solved.
+
+But in the code, the backtrack function is called from solveSudoku. So the code is correct.
+
+But what about the find_empty function? It returns true if there is an empty cell, and sets row and col to the first empty cell. So the code is correct.
+
+Now, testing this code. For example, in the sample input, the code should fill the board correctly.
+
+But what about the order in which the numbers are tried? For example, the code tries numbers from 1 to 9. But in the backtracking approach, the order may affect the performance, but since the problem says that the input has only one solution, it will find it.
+
+But what about the find_empty function? It returns the first empty cell. So the code will try to fill the first empty cell, and proceed recursively.
+
+So the code should work.
+
+Now, the code must be written as a code block. So the code will be:
+
+#include <vector>
+using namespace std;
+
+bool is_valid(int row, int col, char num, vector<vector<char>>& board) {
+    for (int i = 0; i < 9; i++) {
+        if (board[row][i] == num) return false;
+    }
+    for (int i = 0; i < 9; i++) {
+        if (board[i][col] == num) return false;
+    }
+    int start_row = row - row % 3;
+    int start_col = col - col % 3;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (board[start_row + i][start_col + j] == num) return false;
+        }
+    }
+    return true;
+}
+
+bool find_empty(int& row, int& col, vector<vector<char>>& board) {
+    for (row = 0; row < 9; row++) {
+        for (col = 0; col < 9; col++) {
+            if (board[row][col] == '.') return true;
+        }
+    }
+    return false;
+}
+
+bool backtrack(vector<vector<char>>& board) {
+    int row, col;
+    if (!find_empty(row, col, board)) return true;
+    for (int num = 1; num <= 9; num++) {
+        char num_char = '0' + num;
+        if (is_valid(row, col, num_char, board)) {
+            board[row][col] = num_char;
+            if (backtrack(board)) return true;
+            board[row][col] = '.';
+        }
+    }
+    return false;
+}
+
+void solveSudoku(vector<vector<char>>& board) {
+    backtrack(board);
+}
+
+But the code must not have any other functions except the solveSudoku function. Wait, no. The code can have helper functions. So this code is acceptable.
+
+But the problem says that the code must not have a main function. So this code is correct.
+
+But the code must be written as a code block. So the code is as above.
+
+But the code has the backtrack function, which is called from solveSudoku. So the code is correct.
+
+Now, the code for the solveSudoku function is as required.
+
+But the code must not have any other functions except the solveSudoku function. Wait, no. The code can have helper functions. So the code is correct.
+
+But the code must be written as a code block. So the code is as follows.
+
+But the code must not have any other functions except the solveSudoku function. Wait, no. The code can have helper functions. So the code is correct.
+
+So the final code is as written above.
+
+But in the code, the backtrack function is called from solveSudoku. So the code is correct.
+
+Now, the code may have some issues. For example, the find_empty function returns the first empty cell. But in the backtrack function, it's possible that the code may not find the correct cell. But the code is correct.
+
+Another thing: the is_valid function checks for the current num. But the code uses 'num_char' which is '0' + num. So for num from 1 to 9, it's correct.
+
+Yes.
+
+So the code should work.
+
+Now, the code must be written as a code block. So the code is:
+
+#include <vector>
+using namespace std;
+
+bool is_valid(int row, int col, char num, vector<vector<char>>& board) {
+    for (int i = 0; i < 9; i++) {
+        if (board[row][i] == num) return false;
+    }
+    for (int i = 0; i < 9; i++) {
+        if (board[i][col] == num) return false;
+    }
+    int start_row = row - row % 3;
+    int start_col = col - col % 3;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (board[start_row + i][start_col + j] == num) return false;
+        }
+    }
+    return true;
+}
+
+bool find_empty(int& row, int& col, vector<vector<char>>& board) {
+    for (row = 0; row < 9; row++) {
+        for (col = 0; col < 9; col++) {
+            if (board[row][col] == '.') return true;
+        }
+    }
+    return false;
+}
+
+bool backtrack(vector<vector<char>>& board) {
+    int row, col;
+    if (!find_empty(row, col, board)) return true;
+    for (int num = 1; num <= 9; num++) {
+        char num_char = '0' + num;
+        if (is_valid(row, col, num_char, board)) {
+            board[row][col] = num_char;
+            if (backtrack(board)) return true;
+            board[row][col] = '.';
+        }
+    }
+    return false;
+}
+
+void solveSudoku(vector<vector<char>>& board) {
+    backtrack(board);
+}
+
+But the code must not have any other functions except the solveSudoku function. Wait, no. The code can have helper functions. So this code is correct.
+
+But the problem says that the code must not have any main function. So this code is correct.
+
+But the code must be written as a code block. So the code is as above.
+
+But the code has the backtrack function, which is called from solveSudoku. So the code is correct.
+
+Now, the code may have some issues. For example, the find_empty function may not find the next empty cell. But in the code, it's correct. Because it loops through all rows and columns, and returns the first empty cell.
+
+Yes.
+
+So this code should solve the problem.
+</think>
+
+```cpp
+#include <vector>
+using namespace std;
+
+bool is_valid(int row, int col, char num, vector<vector<char>>& board) {
+    for (int i = 0; i < 9; i++) {
+        if (board[row][i] == num) return false;
+    }
+    for (int i = 0; i < 9; i++) {
+        if (board[i][col] == num) return false;
+    }
+    int start_row = row - row % 3;
+    int start_col = col - col % 3;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (board[start_row + i][start_col + j] == num) return false;
+        }
+    }
+    return true;
+}
+
+bool find_empty(int& row, int& col, vector<vector<char>>& board) {
+    for (row = 0; row < 9; row++) {
+        for (col = 0; col < 9; col++) {
+            if (board[row][col] == '.') return true;
+        }
+    }
+    return false;
+}
+
+bool backtrack(vector<vector<char>>& board) {
+    int row, col;
+    if (!find_empty(row, col, board)) return true;
+    for (int num = 1; num <= 9; num++) {
+        char num_char = '0' + num;
+        if (is_valid(row, col, num_char, board)) {
+            board[row][col] = num_char;
+            if (backtrack(board)) return true;
+            board[row][col] = '.';
+        }
+    }
+    return false;
+}
+
+void solveSudoku(vector<vector<char>>& board) {
+    backtrack(board);
+}
+```

@@ -1,0 +1,47 @@
+#include <vector>
+#include <string>
+#include <unordered_map>
+using namespace std;
+
+vector<int> findSubstring(string s, vector<string>& words) {
+    vector<int> result;
+    if (s.empty() || words.empty()) return result;
+
+    int wordLength = words[0].size();
+    int wordCount = words.size();
+    int totalLength = wordLength * wordCount;
+    if (s.size() < totalLength) return result;
+
+    unordered_map<string, int> wordMap;
+    for (const string& word : words) {
+        wordMap[word]++;
+    }
+
+    for (int i = 0; i < wordLength; ++i) {
+        unordered_map<string, int> currentMap;
+        int left = i;
+        int count = 0;
+        for (int j = i; j <= s.size() - wordLength; j += wordLength) {
+            string word = s.substr(j, wordLength);
+            if (wordMap.find(word) != wordMap.end()) {
+                currentMap[word]++;
+                count++;
+                while (currentMap[word] > wordMap[word]) {
+                    string leftWord = s.substr(left, wordLength);
+                    currentMap[leftWord]--;
+                    left += wordLength;
+                    count--;
+                }
+                if (count == wordCount) {
+                    result.push_back(left);
+                }
+            } else {
+                currentMap.clear();
+                count = 0;
+                left = j + wordLength;
+            }
+        }
+    }
+
+    return result;
+}

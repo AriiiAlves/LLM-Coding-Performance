@@ -1,0 +1,43 @@
+#include <iostream>
+
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
+
+ListNode* reverseKGroup(ListNode* head, int k) {
+    if (!head || !head->next || k == 1) return head;
+
+    ListNode dummy(0);
+    dummy.next = head;
+    ListNode* prev = &dummy;
+    ListNode* curr = head;
+
+    while (true) {
+        ListNode* tail = prev;
+        for (int i = 0; i < k; ++i) {
+            tail = tail->next;
+            if (!tail) return dummy.next;
+        }
+
+        ListNode* nextGroup = tail->next;
+        ListNode* p = curr;
+        ListNode* q = nullptr;
+        ListNode* r = nullptr;
+
+        for (int i = 0; i < k; ++i) {
+            r = p->next;
+            p->next = q;
+            q = p;
+            p = r;
+        }
+
+        prev->next = q;
+        curr->next = nextGroup;
+        prev = curr;
+        curr = nextGroup;
+    }
+}

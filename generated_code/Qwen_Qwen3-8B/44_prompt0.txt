@@ -1,0 +1,537 @@
+<think>
+Okay, I need to solve this wildcard matching problem. Let's think about the requirements. The problem says that the pattern p can have '?' which matches any single character, and '*' which matches any sequence, including empty. And I have to check if the entire string s matches the pattern p.
+
+Hmm, the examples show that for "aa" and "a", it's false because the pattern is too short. But with "*", it's true. So the key is to handle the '*' correctly, which can match any number of characters.
+
+So how to approach this? Well, dynamic programming seems like a common approach for such pattern matching problems. Let me think about the DP approach.
+
+Let's consider a DP table where dp[i][j] represents whether the first i characters of s match the first j characters of p.
+
+The base case would be dp[0][0] = true, meaning empty string matches empty pattern. Then, for the cases where the pattern has '*'s. For example, if the pattern has a '*' at position j-1, then it can match zero or more characters. So, for dp[i][j], if the current pattern character is '*', then we can check if dp[i][j-1] (meaning the * matches zero characters) or dp[i-1][j-1] (meaning the * matches one or more characters, but only if the previous characters matched).
+
+Wait, but how to handle the transitions. Let me think again.
+
+The recurrence would be:
+
+If p[j-1] is a normal character (not * or ?), then check if s[i-1] equals p[j-1], and dp[i-1][j-1] is true.
+
+If p[j-1] is '?', then check if dp[i-1][j-1] is true.
+
+If p[j-1] is '*', then we can consider two possibilities: the * matches zero characters (so we look at dp[i][j-1]), or the * matches one or more characters (so we look at dp[i-1][j-1], but only if the previous characters matched).
+
+Wait, but for the * case, the * can match any number of characters. So for the current i and j, if the * is at position j, then the * can match the current s[i], and we can check if the rest of the pattern matches the remaining s. But how to model that in DP.
+
+So the DP approach would be:
+
+Initialize a 2D array dp with (len(s)+1) rows and (len(p)+1) columns.
+
+dp[0][0] = true.
+
+For the first row (when s is empty), the pattern must consist of all *s. So for j >=1, if p[j-1] is *, then dp[0][j] = dp[0][j-1].
+
+Then, for each i and j, we check:
+
+If p[j-1] is a normal character, then check if s[i-1] == p[j-1] and dp[i-1][j-1] is true.
+
+If p[j-1] is '?', then check dp[i-1][j-1].
+
+If p[j-1] is '*', then check if either dp[i][j-1] (meaning * matches zero characters) or dp[i-1][j-1] (meaning * matches one or more characters, but only if the previous state was true).
+
+Wait, but for the * case, the * can match any number of characters. So for example, if the current pattern is *, then for the current i and j, the * can match the current s[i], and then we can check if the rest of the pattern (from j-1) matches the rest of the string (from i-1). But how to model that.
+
+Alternatively, the * can match zero characters, which would mean that the current pattern is the same as the previous pattern (without the *). Or, the * can match one or more characters, which would mean that the current s[i] is matched by the * and the rest of the pattern (from j-1) matches the rest of the string (from i-1).
+
+So the recurrence for * is:
+
+dp[i][j] = dp[i][j-1] || dp[i-1][j-1]
+
+Wait, but that's not entirely correct. Because the * can match any number of characters, including zero. So for example, if the pattern is "a*b", then the * can match zero or more characters. So for the case where the * is at position j, the current i can be any length as long as the rest of the pattern matches.
+
+But in the DP approach, the * can match zero characters, which would mean that the current i is the same as before, but j is reduced by one. Or, the * can match one or more characters, which would mean that the current i is reduced by one, and j remains the same.
+
+Wait, but how to model that. Let me think again.
+
+For the * case, the current pattern character is *, so the * can match any number of characters. So for the current i and j, the * can match zero characters (so we check if the previous state (i, j-1) is true), or match one or more characters (so we check if the previous state (i-1, j) is true). Wait, no. Because if the * is matching one or more characters, then the previous state would be (i-1, j) because the * is still in the pattern. So for example, if the pattern is * and the string is "abc", then the * can match all three characters. So for the case where the * is in the pattern, the current i can be any length as long as the rest of the pattern matches.
+
+So the recurrence for * is:
+
+dp[i][j] = dp[i][j-1] || dp[i-1][j]
+
+Wait, but that's not correct. Because the * can match any number of characters. So for example, if the current pattern is *, then the * can match the current character in s, and then the rest of the pattern (which is j-1) must match the rest of the string (i-1). So the recurrence would be:
+
+dp[i][j] = dp[i-1][j] || dp[i][j-1]
+
+Wait, but how does that work. Let me think of an example. Suppose the pattern is * and the string is "abc". Then, for i=3, j=1. The * can match all three characters. So dp[3][1] would be true. How does the recurrence work here?
+
+In this case, dp[3][1] would be dp[3][0] (which is false, since j=0 is empty pattern) or dp[2][1] (which is true if the * can match the first two characters). Wait, but how does that work. Maybe the recurrence is:
+
+dp[i][j] = dp[i][j-1] (the * matches zero characters) OR (dp[i-1][j] (the * matches one or more characters, so the previous i-1 characters in s must match the current j pattern).
+
+Wait, but for the * case, the * can match any number of characters. So, for example, if the current pattern is *, then the * can match the current character (s[i-1]) and then the rest of the pattern (which is j-1) must match the rest of the string (i-1). But how to model that.
+
+Alternatively, the * can match any number of characters, so for the current i and j, the * can match the current s[i-1], and then the rest of the pattern (j-1) must match the rest of the string (i-1). But that's the same as checking if dp[i-1][j] is true. Because the * is still in the pattern, so the pattern is j-1 (since the * is at j-1). Wait, no. The pattern is p[0..j-1], and the * is at position j-1. So when considering the * as matching one or more characters, the rest of the pattern (from j-1) is the same as the current pattern. So the * can match any number of characters, so the current i can be any length as long as the rest of the pattern (from j-1) matches the rest of the string.
+
+Wait, maybe the correct recurrence for * is:
+
+dp[i][j] = dp[i][j-1] || dp[i-1][j]
+
+Because:
+
+- dp[i][j-1] represents the case where the * matches zero characters (so we take the previous j-1 pattern and check if it matches the current i string).
+
+- dp[i-1][j] represents the case where the * matches one or more characters (so the current i-1 characters in s must match the j pattern, which includes the *).
+
+But how does that work? Let's take an example. Suppose the pattern is "a*b", and the string is "axb". So for the * in the pattern, when considering the i=2 (s is "ax") and j=2 (pattern is "a*"), then dp[2][2] would be true if the * can match the 'x' in the string. So for that, the * can match the 'x' and then the rest of the pattern (which is 'b') must match the remaining string. But in this case, the rest of the pattern is 'b', and the remaining string is 'b' (i=3, j=3). So the recurrence would check if dp[2][2] is true (the * matches zero characters, which would be the case if the pattern up to j-1 (which is 'a') matches the current i (2) string. But in this case, the pattern 'a' would match 'ax' only if the string is 'a', but here it's 'ax', so that's not the case. So the other part is dp[i-1][j], which is dp[1][2], which would be whether the pattern 'a*' matches the string 'a'. Which is true. So the recurrence would be correct.
+
+So the recurrence for * is dp[i][j] = dp[i][j-1] || dp[i-1][j].
+
+But how to handle the initial conditions. Let's think about the DP table.
+
+Now, considering the constraints. The maximum length of s and p is 2000. So a 2D DP array of size (2000+1) x (2000+1) would be O(4,000,000) which is acceptable for C++.
+
+But for space optimization, perhaps we can use a 1D array. But for now, let's proceed with the 2D approach.
+
+So, the steps are:
+
+Initialize a DP table with (s.length()+1) rows and (p.length()+1) columns.
+
+Set dp[0][0] = true.
+
+Then, for the first row (i=0, which represents empty string s), we can only have dp[0][j] = true if all the previous characters in p are *.
+
+For example, if p is "a*b", then for j=0, dp[0][0] is true. For j=1, p[0] is 'a', so dp[0][1] is false. For j=2, p[1] is '*', so dp[0][2] = dp[0][1] (which is false) || ... wait, no. For the first row, i=0, and j varies. So for j=1, the pattern is 'a', which can't match empty string. For j=2, the pattern is 'a*', which can match empty string? No. Because the * can match zero characters. So for the pattern 'a*', the empty string would require that the * matches zero characters. But the 'a' is in the pattern. So the first row (i=0) would have dp[0][j] = true only if the pattern up to j is all *s. So for j=0, it's true. For j=1, if p[0] is *, then dp[0][1] = true. Otherwise, false.
+
+So for the first row, we can compute it as follows:
+
+dp[0][j] = dp[0][j-1] && (p[j-1] == '*')
+
+So for each j, if the current character is *, then dp[0][j] is true if dp[0][j-1] is true. Otherwise, it's false.
+
+So that's how the first row is filled.
+
+Then, for each i from 1 to len(s), and j from 1 to len(p):
+
+if p[j-1] is a normal character (not * or ?), then check if s[i-1] == p[j-1] and dp[i-1][j-1] is true.
+
+if p[j-1] is '?', then check if dp[i-1][j-1] is true.
+
+if p[j-1] is '*', then check if dp[i][j-1] (the * matches zero characters) or dp[i-1][j] (the * matches one or more characters).
+
+So the code would be:
+
+for (int i = 1; i <= s.length(); i++) {
+    for (int j = 1; j <= p.length(); j++) {
+        if (p[j-1] == '*') {
+            dp[i][j] = dp[i][j-1] || dp[i-1][j];
+        } else if (p[j-1] == '?') {
+            dp[i][j] = dp[i-1][j-1];
+        } else {
+            dp[i][j] = (s[i-1] == p[j-1]) && dp[i-1][j-1];
+        }
+    }
+}
+
+But wait, for the case where the pattern is * and the string is empty, then the * can match zero characters. So the first row is handled correctly.
+
+Now, considering the space. For s and p up to 2000, the DP table would be 2001 x 2001, which is about 4 million entries. That's acceptable in C++.
+
+But for space optimization, perhaps we can use a 1D array. Let's think. Since each row depends only on the previous row and the current row. So maybe we can use a 1D array and update it in place. But for now, let's proceed with the 2D array.
+
+Now, the problem is to implement this in C++. But the code needs to be written as a function, and include the necessary headers.
+
+So the code would be:
+
+#include <string>
+using namespace std;
+
+bool isMatch(string s, string p) {
+    int m = s.length();
+    int n = p.length();
+    vector<vector<bool>> dp(m+1, vector<bool>(n+1, false));
+    dp[0][0] = true;
+    for (int j = 1; j <= n; j++) {
+        if (p[j-1] == '*') {
+            dp[0][j] = dp[0][j-1];
+        }
+    }
+    for (int i = 1; i <= m; i++) {
+        for (int j = 1; j <= n; j++) {
+            if (p[j-1] == '*') {
+                dp[i][j] = dp[i][j-1] || dp[i-1][j];
+            } else if (p[j-1] == '?') {
+                dp[i][j] = dp[i-1][j-1];
+            } else {
+                dp[i][j] = (s[i-1] == p[j-1]) && dp[i-1][j-1];
+            }
+        }
+    }
+    return dp[m][n];
+}
+
+Wait, but what about the case where the pattern is longer than the string, but with *s. For example, s is "a", p is "a*". Then, the code should return true. Let's see.
+
+In the code, for i=1, j=2 (since p is "a*"). For j=2, p[j-1] is *.
+
+So dp[1][2] = dp[1][1] || dp[0][2].
+
+dp[1][1] is for the pattern "a" and string "a", which is true. So dp[1][2] would be true. So the code returns true.
+
+Yes.
+
+Another example: s = "aa", p = "a". Then, the code would have dp[2][1] = (s[1] == p[0]) && dp[1][0]. But dp[1][0] is false. So dp[2][1] is false. Which is correct.
+
+Another example: s = "aa", p = "*". Then, for i=2, j=1. The code would check if p[0] is *, so dp[2][1] = dp[2][0] || dp[1][1]. dp[2][0] is false. dp[1][1] is true (since for i=1, j=1, p[0] is *, so dp[1][1] = dp[1][0] || dp[0][1]. dp[1][0] is false, dp[0][1] is false (since p[0] is *? Wait, for j=1, the first row is filled as follows. For j=1, p[0] is *, so dp[0][1] = dp[0][0] which is true. So for i=1, j=1, dp[1][1] = dp[1][0] (false) || dp[0][1] (true) → true. So dp[2][1] is true. So the code returns true. Which is correct.
+
+So the code seems to handle that.
+
+But what about the case where the pattern is "a*b" and the string is "axb"? Let's see. The code would compute dp[3][3] as follows. Let's think step by step.
+
+But perhaps the code is correct.
+
+But what about the space? For m and n up to 2000, the 2D array would be 2001x2001, which is 4 million entries. But in C++, that's acceptable.
+
+But for the problem, the code may need to be optimized for space. However, given the constraints, it's acceptable.
+
+But in C++, the code may need to use a 2D vector. However, for large m and n, this may take up a lot of memory. But given that the constraints are up to 2000, it's manageable.
+
+Now, let's check the sample inputs.
+
+Sample 1: s = "aa", p = "a". The code would have dp[2][1] = (s[1] == p[0]) && dp[1][0]. dp[1][0] is false. So the result is false. Correct.
+
+Sample 2: s = "aa", p = "*". The code returns true. Correct.
+
+Sample 3: s = "cb", p = "?a". For i=2, j=2. Let's see:
+
+p[1] is 'a'. So for j=2, the code checks if p[1] is 'a' and s[1] is 'a'? s[1] is 'b', so no. So dp[2][2] is false. Correct.
+
+So the code seems to handle these cases.
+
+But what about the case where the pattern has multiple *s. For example, s = "abc", p = "a*". Then, the code would return true.
+
+Another case: s = "abc", p = "a*b". The code would check for the * in the pattern. Let's see.
+
+But the code would handle that.
+
+Now, what about the case where the pattern is "a*" and the string is "a". Then, the code would return true. Because the * can match zero characters. So the code would have for i=1, j=2. dp[1][2] = dp[1][1] || dp[0][2]. dp[1][1] is for the pattern "a" and string "a", which is true. So dp[1][2] is true. So the code returns true.
+
+Yes.
+
+So the code seems correct.
+
+But what about the case where the pattern is "a*?". For example, s = "a", p = "a*?". Then, the code would check for i=1, j=3. The pattern is a*?.
+
+So for j=3, the current character is '?'. So the code would check if dp[0][2] is true. Because for j=3, the code would check if the previous character is *.
+
+Wait, let's think. For j=3, the pattern is "a*?".
+
+So for i=1, j=3:
+
+p[2] is '?', so the code checks if dp[i-1][j-1] (i-1 is 0, j-1 is 2). So dp[0][2] is true? Let's see.
+
+For j=2, the pattern is "a*". So dp[0][2] is true. So dp[0][2] is true. So dp[1][3] is true. But the pattern is "a*?" and the string is "a". So the * can match zero characters, and the ? would match the current character. Wait, but the pattern is "a*?", which is three characters. So the pattern is a*?.
+
+So the pattern is a*? which would require that the string has length 3. But the string is length 1. So the code would return false. But according to the code, for i=1, j=3, the code would check if the current character is '?', which is the third character. So the code would check if dp[0][2] is true. Which is true. So the code would return true. But that's wrong.
+
+Wait, what's the correct answer here? The pattern is a*? and the string is "a". The pattern is a*? which requires that the string has length 3. Because the * can match zero or more characters, but the ? requires one character. So the total length is 1 (a) + 0 (from *) + 1 (from ?) → total length 2. But the string is length 1. So the pattern is a*? which requires that the string has length 2. So the code would return false. But according to the code, for i=1, j=3, the code would check if the previous state is true. Let's see:
+
+Let me walk through the code for this case.
+
+s = "a", p = "a*?".
+
+m = 1, n = 3.
+
+Initialize dp as 2x4 (since m+1=2, n+1=4).
+
+dp[0][0] = true.
+
+For j from 1 to 3:
+
+j=1: p[0] is 'a', so dp[0][1] is false.
+
+j=2: p[1] is '*', so dp[0][2] = dp[0][1] → false.
+
+j=3: p[2] is '?', so dp[0][3] is false.
+
+Then, for i=1 (s is "a"):
+
+for j=1:
+
+p[0] is 'a', so check if s[0] == 'a' and dp[0][0] → true. So dp[1][1] = true.
+
+for j=2:
+
+p[1] is '*', so dp[1][2] = dp[1][1] || dp[0][2]. dp[1][1] is true, so dp[1][2] is true.
+
+for j=3:
+
+p[2] is '?', so check dp[0][2] → which is false. So dp[1][3] is false.
+
+So the code returns false. Which is correct. So the code works here.
+
+So the code seems to handle that case.
+
+Another case: s = "ab", p = "a*?". Then, the code would return true. Because the * can match zero characters, and the ? matches the 'b'.
+
+So for i=2, j=3. Let's see:
+
+dp[2][3] = dp[1][2] (which is true) || dp[1][2] (since j=3, p[2] is '?', so the code would check dp[1][2] (i-1=1, j-1=2). So dp[1][2] is true. So dp[2][3] is true. So the code returns true. Which is correct.
+
+So the code seems to handle that.
+
+So the code seems correct.
+
+Now, considering the code in C++. But in C++, the code would need to use vectors. But for large m and n, the code may take O(mn) time and space. But given the constraints, it's acceptable.
+
+But what about the space? For 2000x2000, it's 4 million entries. Each is a bool. So in C++, that's manageable.
+
+But in C++, the code may need to use a 2D vector. So the code would be:
+
+#include <string>
+#include <vector>
+using namespace std;
+
+bool isMatch(string s, string p) {
+    int m = s.length();
+    int n = p.length();
+    vector<vector<bool>> dp(m+1, vector<bool>(n+1, false));
+    dp[0][0] = true;
+    for (int j = 1; j <= n; j++) {
+        if (p[j-1] == '*') {
+            dp[0][j] = dp[0][j-1];
+        }
+    }
+    for (int i = 1; i <= m; i++) {
+        for (int j = 1; j <= n; j++) {
+            if (p[j-1] == '*') {
+                dp[i][j] = dp[i][j-1] || dp[i-1][j];
+            } else if (p[j-1] == '?') {
+                dp[i][j] = dp[i-1][j-1];
+            } else {
+                dp[i][j] = (s[i-1] == p[j-1]) && dp[i-1][j-1];
+            }
+        }
+    }
+    return dp[m][n];
+}
+
+But wait, in the code, for the first row, the code loops j from 1 to n. For each j, if p[j-1] is *, then dp[0][j] = dp[0][j-1]. So for example, if the pattern is "a*b", then for j=1, p[0] is 'a', so dp[0][1] is false. For j=2, p[1] is '*', so dp[0][2] = dp[0][1] → false. For j=3, p[2] is 'b', so dp[0][3] is false. So the first row is filled correctly.
+
+But in the case where the pattern is "a*b", the first row (i=0) would have dp[0][j] as false for all j except j=0. So the code is correct.
+
+Another possible optimization is to use a 1D array. Let's think. Since each row depends only on the previous row and the current row. So for space optimization, we can use a 1D array and update it in place.
+
+But for the code, perhaps the 2D approach is easier to write and understand.
+
+But for the problem, the code is correct.
+
+Now, let's check the sample input 3: s = "cb", p = "?a".
+
+The code would compute:
+
+m=2, n=2.
+
+dp[0][0] = true.
+
+For j=1, p[0] is '?', so for the first row, j=1, since p[0] is not *, dp[0][1] is false.
+
+Then, for i=1, j=1: p[0] is '?', so dp[1][1] = dp[0][0] → true.
+
+For i=1, j=2: p[1] is 'a'. So check if s[0] == 'a' (s[0] is 'c') → false. So dp[1][2] is false.
+
+For i=2, j=1: p[0] is '?', so check dp[1][0] → false.
+
+For i=2, j=2: p[1] is 'a'. Check if s[1] == 'a' (s[1] is 'b') → false. So dp[2][2] is false. So the code returns false. Which is correct.
+
+So the code works.
+
+Another test case: s = "ab", p = "?*". The code should return true. Let's see.
+
+For i=2, j=2. The pattern is "?*".
+
+For j=2, p[1] is '*'. So dp[2][2] = dp[2][1] || dp[1][2].
+
+dp[2][1] is for j=1, which is '?'. So for i=2, j=1: p[0] is '?', so dp[2][1] = dp[1][0] → false.
+
+dp[1][2] is for i=1, j=2. p[1] is '*', so dp[1][2] = dp[1][1] || dp[0][2]. dp[1][1] is for j=1, which is '?', so dp[1][1] = dp[0][0] → true. So dp[1][2] is true. So dp[2][2] = true || true → true. So the code returns true. Which is correct.
+
+So the code works.
+
+Now, the code seems correct. But what about the case where the pattern is "a*" and the string is "a"? The code returns true. Which is correct.
+
+So the code should be correct.
+
+Now, the code needs to be written in C++. The code includes the necessary headers. The code uses vector<vector<bool>> for the DP table.
+
+But in C++, the code may need to include <vector> as well. But the initial code given includes <string> and uses using namespace std. So the code should include <vector> as well.
+
+Wait, the code as written includes <string> and uses vector. So the code should include <vector> as well. But the initial code given in the problem has:
+
+#include <string>
+using namespace std;
+
+So the code needs to include <vector> as well. So the code should have:
+
+#include <string>
+#include <vector>
+using namespace std;
+
+But the code as written in the problem's initial code has only #include <string>. So the code needs to include <vector> for the vector<vector<bool>>.
+
+So the code should have:
+
+#include <string>
+#include <vector>
+using namespace std;
+
+But the user's code may not have that. So the code must include those headers.
+
+So the final code would be:
+
+#include <string>
+#include <vector>
+using namespace std;
+
+bool isMatch(string s, string p) {
+    int m = s.length();
+    int n = p.length();
+    vector<vector<bool>> dp(m+1, vector<bool>(n+1, false));
+    dp[0][0] = true;
+    for (int j = 1; j <= n; j++) {
+        if (p[j-1] == '*') {
+            dp[0][j] = dp[0][j-1];
+        }
+    }
+    for (int i = 1; i <= m; i++) {
+        for (int j = 1; j <= n; j++) {
+            if (p[j-1] == '*') {
+                dp[i][j] = dp[i][j-1] || dp[i-1][j];
+            } else if (p[j-1] == '?') {
+                dp[i][j] = dp[i-1][j-1];
+            } else {
+                dp[i][j] = (s[i-1] == p[j-1]) && dp[i-1][j-1];
+            }
+        }
+    }
+    return dp[m][n];
+}
+
+But wait, the code uses vector<vector<bool>>. So the code must include <vector> header. So the code must have #include <vector> in addition to <string>.
+
+So the code should have:
+
+#include <string>
+#include <vector>
+using namespace std;
+
+But the initial code given in the problem has only #include <string>. So the code must include that.
+
+So the code is correct.
+
+But what about the space? For m and n up to 2000, the code uses O(mn) space. But for the problem's constraints, it's acceptable.
+
+Another possible optimization is to use a 1D array. Let's think about that. Since each row depends only on the previous row and the current row. So for space optimization, we can use a 1D array and update it in place.
+
+For example, we can have a 1D array dp of size n+1. Then, for each i, we can update the dp array.
+
+Let me think. The initial state is dp[0] = true. For the first row, we can compute the dp array for the first row.
+
+Then, for each i, we can compute the new dp array based on the previous row.
+
+But for the case of the * in the pattern, the recurrence is dp[j] = dp[j] || dp[j-1] (for the * case). Wait, but how to handle that.
+
+Let me think. For the 1D approach:
+
+We can have a 1D array dp where dp[j] represents whether the first i characters of s match the first j characters of p.
+
+Initially, for i=0 (empty s), dp[j] is true if all the first j characters of p are *.
+
+Then, for each i, we can compute the new dp array.
+
+But for the * case, the recurrence is:
+
+dp[j] = dp[j] (the * matches zero characters) or dp[j-1] (the * matches one or more characters).
+
+Wait, but for the 1D approach, the recurrence would be:
+
+For each i, and j:
+
+if p[j-1] is '*', then dp[j] = dp[j] || dp[j-1]
+
+But how to handle the previous state.
+
+But for the 1D approach, the code would be:
+
+Initialize dp as a 1D array of size n+1.
+
+dp[0] = true.
+
+for (int j = 1; j <= n; j++) {
+    if (p[j-1] == '*') {
+        dp[j] = dp[j-1];
+    }
+}
+
+Then, for each i from 1 to m:
+
+    create a new array new_dp.
+
+    for j from 1 to n:
+
+        if p[j-1] == '*':
+
+            new_dp[j] = new_dp[j-1] || dp[j]
+
+        else if p[j-1] == '?':
+
+            new_dp[j] = dp[j-1]
+
+        else:
+
+            new_dp[j] = (s[i-1] == p[j-1]) && dp[j-1]
+
+    dp = new_dp;
+
+But this would require O(n) space, which is better for large m and n.
+
+But for the code, perhaps the 1D approach is better for space. However, for the code, the 2D approach is easier to write and understand.
+
+But given that the problem allows for up to 2000, the 2D approach is acceptable.
+
+So the code as written is correct.
+
+Now, the code must be written as per the problem's instructions. The code must not have a main function, and must not wrap in a class. The code must include all necessary headers.
+
+So the code includes <string> and <vector>, and uses the vector<vector<bool>>.
+
+So the code is correct.
+</think>
+
+```cpp
+#include <string>
+#include <vector>
+using namespace std;
+
+bool isMatch(string s, string p) {
+    int m = s.length();
+    int n = p.length();
+    vector<vector<bool>> dp(m + 1, vector<bool>(n + 1, false));
+    dp[0][0] = true;
+    for (int j = 1; j <= n; j++) {
+        if (p[j - 1] == '*') {
+            dp[0][j] = dp[0][j - 1];
+        }
+    }
+    for (int i = 1; i <= m; i++) {
+        for (int j = 1; j <= n; j++) {
+            if (p[j - 1] == '*') {
+                dp[i][j] = dp[i][j - 1] || dp[i - 1][j];
+            } else if (p[j - 1] == '?') {
+                dp[i][j] = dp[i - 1][j - 1];
+            } else {
+                dp[i][j] = (s[i - 1] == p[j - 1]) && dp[i - 1][j - 1];
+            }
+        }
+    }
+    return dp[m][n];
+}
+```
